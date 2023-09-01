@@ -3,8 +3,6 @@ from __future__ import annotations
 import argparse
 import time
 
-import cv2
-import numpy
 import serial
 
 from scripts._alarm import alarm
@@ -13,37 +11,18 @@ from scripts.engine import all_match
 from scripts.engine import always_matches
 from scripts.engine import do
 from scripts.engine import make_vid
-from scripts.engine import Matcher
 from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.thrids import region_colorish
 from scripts.thrids import SERIAL_DEFAULT
-
-
-def region_colorish(
-        tl: Point,
-        br: Point,
-        hsv_low: tuple[int, int, int],
-        hsv_high: tuple[int, int, int],
-        ratio: float,
-) -> Matcher:
-    def region_colorish_impl(frame: numpy.ndarray) -> bool:
-        crop = frame[tl.y:br.y, tl.x:br.x]
-        hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, hsv_low, hsv_high)
-        got_ratio = numpy.count_nonzero(mask) / mask.size
-        if got_ratio >= .001:
-            print(f'{got_ratio=}')
-        return got_ratio >= ratio
-    return region_colorish_impl
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
-    parser.add_argument('--quiet', action='store_true')
     args = parser.parse_args()
 
     encounter_timeout = Timeout()
@@ -137,7 +116,7 @@ def main() -> int:
                 'INITIAL',
             ),
         ),
-        **alarm('ALARM', quiet=args.quiet),
+        **alarm('ALARM', quiet=False),
     }
 
     with serial.Serial(args.serial, 9600) as ser:
