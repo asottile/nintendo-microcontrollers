@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import difflib
 import time
 
 import serial
@@ -16,6 +17,7 @@ from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.thrids import get_text_rotated
 from scripts.thrids import region_colorish
 from scripts.thrids import SERIAL_DEFAULT
 
@@ -37,18 +39,37 @@ def main() -> int:
         nonlocal duration
         duration = time.monotonic() - t0
 
+    def is_shiny_target(frame: object) -> bool:
+        pokemon = get_text_rotated(
+            frame,
+            Point(y=171, x=289),
+            Point(y=239, x=311),
+            invert=True,
+        )
+        print(f'raw text: {pokemon}')
+
+        targets = ('corsola', 'octillery', 'huntail')
+        best = difflib.get_close_matches(pokemon.lower(), targets)
+        if not best:
+            print('=> unknown pokemon')
+            return is_shiny(frame)
+        else:
+            print(f'=> {best[0]}')
+            return best[0] == 'huntail' and is_shiny(frame)
+
     def is_shiny(frame: object) -> bool:
         print(f'delay: {duration:.2f}')
+
         return duration >= 12
 
     states: States = {
         'INITIAL': (
             (
                 region_colorish(
-                    Point(y=268, x=760),
-                    Point(y=288, x=778),
-                    (24, 100, 130),
-                    (28, 150, 255),
+                    Point(y=263, x=862),
+                    Point(y=279, x=877),
+                    (20, 75, 130),
+                    (24, 100, 160),
                     .75,
                 ),
                 Press('Y'),
@@ -58,10 +79,10 @@ def main() -> int:
         'WAIT': (
             (
                 region_colorish(
-                    Point(y=339, x=289),
-                    Point(y=380, x=326),
-                    (2, 140, 160),
-                    (12, 190, 250),
+                    Point(y=352, x=382),
+                    Point(y=399, x=434),
+                    (173, 50, 100),
+                    (180, 255, 200),
                     .001,
                 ),
                 do(Press('A'), encounter_timeout.after(3)),
@@ -71,8 +92,8 @@ def main() -> int:
         'WAIT_FOR_BATTLE': (
             (
                 region_colorish(
-                    Point(y=194, x=725),
-                    Point(y=216, x=749),
+                    Point(y=263, x=862),
+                    Point(y=279, x=877),
                     (0, 0, 0),
                     (255, 25, 25),
                     .9,
@@ -84,10 +105,10 @@ def main() -> int:
                 all_match(
                     encounter_timeout.expired,
                     region_colorish(
-                        Point(y=165, x=488),
-                        Point(y=180, x=504),
-                        (101, 130, 30),
-                        (106, 160, 60),
+                        Point(y=159, x=579),
+                        Point(y=184, x=602),
+                        (105, 160, 10),
+                        (109, 190, 40),
                         .9,
                     ),
                 ),
@@ -98,10 +119,10 @@ def main() -> int:
         'WAIT_FOR_FIGHT': (
             (
                 region_colorish(
-                    Point(y=298, x=844),
-                    Point(y=313, x=859),
-                    (2, 200, 200),
-                    (5, 255, 255),
+                    Point(y=335, x=952),
+                    Point(y=358, x=973),
+                    (175, 160, 100),
+                    (180, 255, 150),
                     .7,
                 ),
                 battle_started,
@@ -109,7 +130,11 @@ def main() -> int:
             ),
         ),
         'DECIDE': (
-            (is_shiny, do(), 'ALARM'),
+            (is_shiny_target, do(), 'ALARM'),
+            (is_shiny, Press('!', duration=.5), 'RUN'),
+            (always_matches, do(), 'RUN'),
+        ),
+        'RUN': (
             (
                 always_matches,
                 do(Press('s'), Wait(.25), Press('d'), Wait(.25), Press('A')),
