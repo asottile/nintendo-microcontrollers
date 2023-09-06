@@ -184,7 +184,6 @@ def main() -> int:
                 do(Press('s'), Wait(.25), Press('d'), Wait(.25), Press('A')),
                 'INITIAL',
             ),
-            (always_matches, do(), 'RUN'),
         ),
         **alarm('ALARM', quiet=False),
     }
