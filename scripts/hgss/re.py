@@ -56,8 +56,8 @@ def main() -> int:
         'INITIAL': (
             (
                 region_colorish(
-                    Point(y=302, x=825),
-                    Point(y=339, x=836),
+                    Point(y=341, x=861),
+                    Point(y=372, x=873),
                     (80, 200, 100),
                     (87, 255, 150),
                     .75,
@@ -69,8 +69,8 @@ def main() -> int:
         'WIGGLE': (
             (
                 region_colorish(
-                    Point(y=236, x=825),
-                    Point(y=261, x=843),
+                    Point(y=278, x=867),
+                    Point(y=301, x=884),
                     (0, 0, 0),
                     (255, 25, 25),
                     .95,
@@ -83,9 +83,9 @@ def main() -> int:
         'WAIT_FOR_FIGHT': (
             (
                 region_colorish(
-                    Point(y=189, x=908),
-                    Point(y=212, x=926),
-                    (168, 130, 140),
+                    Point(y=233, x=945),
+                    Point(y=256, x=966),
+                    (167, 130, 140),
                     (173, 180, 210),
                     .75,
                 ),
