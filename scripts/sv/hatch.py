@@ -18,13 +18,13 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import require_tesseract
 from scripts.engine import run
-from scripts.engine import SERIAL_DEFAULT
 from scripts.engine import States
 from scripts.engine import Wait
 from scripts.engine import Write
 from scripts.sv._bootup import world
 from scripts.sv._move_box import move_box
 from scripts.sv._to_boxes import to_boxes
+from scripts.switch import SERIAL_DEFAULT
 
 
 def main() -> int:

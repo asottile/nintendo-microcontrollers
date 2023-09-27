@@ -16,10 +16,10 @@ from scripts.engine import make_vid
 from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
-from scripts.engine import SERIAL_DEFAULT
 from scripts.engine import States
 from scripts.engine import Wait
 from scripts.sv._bootup import bootup
+from scripts.switch import SERIAL_DEFAULT
 
 
 def crop_count(crop: numpy.ndarray, *, store: bool = False) -> int:

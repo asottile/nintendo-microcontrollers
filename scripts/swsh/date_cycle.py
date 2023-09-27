@@ -3,12 +3,11 @@ from __future__ import annotations
 import argparse
 import calendar
 import datetime
-import sys
 import time
 
 import serial
 
-SERIAL_DEFAULT = 'COM1' if sys.platform == 'win32' else '/dev/ttyUSB0'
+from scripts.switch import SERIAL_DEFAULT
 
 
 def _press(ser: serial.Serial, s: str, duration: float = .05) -> None:

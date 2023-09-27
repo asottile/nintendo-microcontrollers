@@ -25,9 +25,9 @@ from scripts.engine import match_text
 from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
-from scripts.engine import SERIAL_DEFAULT
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.switch import SERIAL_DEFAULT
 from scripts.swsh._bootup import bootup
 from scripts.swsh._bootup import world
 

@@ -3,7 +3,6 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
-import sys
 import time
 from collections.abc import Mapping
 from typing import NamedTuple
@@ -14,7 +13,6 @@ import cv2
 import numpy
 import serial
 
-SERIAL_DEFAULT = 'COM1' if sys.platform == 'win32' else '/dev/ttyUSB0'
 SHOW = not os.environ.get('NOSHOW')
 
 

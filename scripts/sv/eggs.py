@@ -18,8 +18,8 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import require_tesseract
 from scripts.engine import run
-from scripts.engine import SERIAL_DEFAULT
 from scripts.engine import Wait
+from scripts.switch import SERIAL_DEFAULT
 
 
 def main() -> int:

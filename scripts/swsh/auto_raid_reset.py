@@ -3,15 +3,13 @@ from __future__ import annotations
 import argparse
 import calendar
 import datetime
-import sys
 import time
 
 import cv2
 import numpy
 import serial
 
-
-SERIAL_DEFAULT = 'COM1' if sys.platform == 'win32' else '/dev/ttyUSB0'
+from scripts.switch import SERIAL_DEFAULT
 
 
 TYPES = {  # (g, b, r) because dumb fucking cv2

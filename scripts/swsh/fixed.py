@@ -13,9 +13,9 @@ from scripts.engine import do
 from scripts.engine import make_vid
 from scripts.engine import Press
 from scripts.engine import run
-from scripts.engine import SERIAL_DEFAULT
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.switch import SERIAL_DEFAULT
 from scripts.swsh._bootup import bootup
 from scripts.swsh._dialog_shiny_check import dialog
 from scripts.swsh._dialog_shiny_check import dialog_shiny_check
