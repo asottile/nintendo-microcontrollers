@@ -229,6 +229,19 @@ class Wait(NamedTuple):
         wait_and_render(vid, self.d)
 
 
+class Timeout:
+    def __init__(self) -> None:
+        self.end = 0.
+
+    def after(self, t: float) -> Action:
+        def after_impl(vid: object, ser: object) -> None:
+            self.end = time.monotonic() + t
+        return after_impl
+
+    def expired(self, frame: object) -> bool:
+        return time.monotonic() > self.end
+
+
 States = Mapping[str, tuple[tuple[Matcher, Action, str], ...]]
 
 
