@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from scripts._game_crash import GameCrash
 from scripts.engine import all_match
 from scripts.engine import always_matches
 from scripts.engine import Color
@@ -12,6 +11,7 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.switch import GameCrash
 
 game_start = all_match(
     match_px(Point(y=61, x=745), Color(b=217, g=217, r=217)),

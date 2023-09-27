@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from scripts._game_crash import GameCrash
 from scripts.engine import Color
 from scripts.engine import do
 from scripts.engine import match_px
@@ -9,6 +8,7 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.switch import GameCrash
 
 world = match_px(Point(y=598, x=1160), Color(b=17, g=203, r=244))
 
