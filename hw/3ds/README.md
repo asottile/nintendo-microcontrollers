@@ -86,7 +86,7 @@ TP55  home  # for next time
 
 ### wiring diagram
 
-![](https://github.com/asottile/3ds-microcontroller/assets/1810591/d02344e2-5072-4d2c-b17f-9944de57c485)
+![](https://user-images.githubusercontent.com/1810591/265853650-d02344e2-5072-4d2c-b17f-9944de57c485.jpg)
 
 it's quite difficult to see all of the wiring from the photo but here are the
 connections:
