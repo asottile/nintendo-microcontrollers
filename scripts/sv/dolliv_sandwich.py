@@ -8,8 +8,6 @@ import cv2
 import numpy
 import serial
 
-from scripts._clock import clock
-from scripts._clock import States
 from scripts.engine import all_match
 from scripts.engine import always_matches
 from scripts.engine import Color
@@ -20,10 +18,12 @@ from scripts.engine import match_text
 from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
+from scripts.engine import States
 from scripts.engine import Timeout
 from scripts.engine import Wait
 from scripts.sv._bootup import bootup
 from scripts.switch import alarm
+from scripts.switch import clock
 from scripts.switch import reset
 from scripts.switch import SERIAL_DEFAULT
 
