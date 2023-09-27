@@ -8,7 +8,6 @@ import cv2
 import numpy
 import serial
 
-from scripts._alarm import alarm
 from scripts._clock import clock
 from scripts._clock import States
 from scripts._timeout import Timeout
@@ -24,6 +23,7 @@ from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import Wait
 from scripts.sv._bootup import bootup
+from scripts.switch import alarm
 from scripts.switch import reset
 from scripts.switch import SERIAL_DEFAULT
 

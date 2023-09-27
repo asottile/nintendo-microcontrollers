@@ -5,8 +5,13 @@ import subprocess
 import cv2
 import numpy
 
+from scripts.engine import always_matches
+from scripts.engine import do
 from scripts.engine import Matcher
 from scripts.engine import Point
+from scripts.engine import Press
+from scripts.engine import States
+from scripts.engine import Wait
 
 SERIAL_DEFAULT = '/dev/ttyACM0'
 
@@ -52,3 +57,15 @@ def get_text_rotated(
         input=cv2.imencode('.png', crop)[1].tobytes(),
         stderr=subprocess.DEVNULL,
     ).strip().decode()
+
+
+def alarm(name: str) -> States:
+    return {
+        name: (
+            (
+                always_matches,
+                do(Press('!'), Wait(.25), Press('.'), Wait(.25)),
+                name,
+            ),
+        ),
+    }

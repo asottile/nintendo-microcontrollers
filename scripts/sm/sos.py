@@ -7,7 +7,6 @@ import cv2
 import numpy
 import serial
 
-from scripts._alarm import alarm
 from scripts.engine import all_match
 from scripts.engine import always_matches
 from scripts.engine import any_match
@@ -20,6 +19,7 @@ from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
 from scripts.engine import Write
+from scripts.thrids import alarm
 from scripts.thrids import get_text_rotated
 from scripts.thrids import region_colorish
 from scripts.thrids import SERIAL_DEFAULT
@@ -253,7 +253,7 @@ def main() -> int:
             (is_shiny, Press('!', duration=.5), 'INITIAL'),
             (always_matches, do(), 'INITIAL'),
         ),
-        **alarm('ALARM', quiet=False),
+        **alarm('ALARM'),
     }
 
     with serial.Serial(args.serial, 9600) as ser:
