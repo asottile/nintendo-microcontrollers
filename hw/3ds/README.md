@@ -41,7 +41,7 @@ use the appropriate `MCU` and serial port for your board, the pro micro uses
 
 ### parts
 
-for disassembly I followed this guide for [3ds disassembly] carefull with:
+for disassembly I followed this guide for [3ds disassembly] carefully with:
 
 - [JIS screwdrivers]  (don't use phillips!)
 - [precision tweezers]
@@ -50,7 +50,7 @@ for disassembly I followed this guide for [3ds disassembly] carefull with:
 [3ds disassembly]: https://www.ifixit.com/Guide/Nintendo+3DS+Motherboard+Replacement/6017
 [JIS screwdrivers]: https://amzn.to/3sHk8Or
 [precision tweezers]: https://amzn.to/45DjIY8
-[spudgers]: https://amzn.to/3sHEdUO
+[spudgers and opening tools]: https://amzn.to/3sHEdUO
 
 for my assembly I used:
 
