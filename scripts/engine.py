@@ -34,8 +34,8 @@ def getframe(vid: cv2.VideoCapture) -> numpy.ndarray:
     _, frame = vid.read()
     if SHOW:
         cv2.imshow('game', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        raise SystemExit(0)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            raise SystemExit(0)
     return frame
 
 
