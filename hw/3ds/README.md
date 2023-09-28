@@ -30,7 +30,7 @@ make -j5
 you have to be quick with this!
 
 - connect the pro micro to your computer
-- short `rst` to `gnd` twice in quick succession
+- short `rst` to `gnd`
 
 ```bash
 sudo avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -Uflash:w:main.hex
