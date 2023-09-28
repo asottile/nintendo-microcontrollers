@@ -17,8 +17,8 @@ SERIAL_DEFAULT = '/dev/ttyACM0'
 
 
 def region_colorish(
-        tl: Point,
-        br: Point,
+        top_left: Point,
+        bottom_right: Point,
         hsv_low: tuple[int, int, int],
         hsv_high: tuple[int, int, int],
         ratio: float,
@@ -26,6 +26,9 @@ def region_colorish(
         quiet: bool = True,
 ) -> Matcher:
     def region_colorish_impl(frame: numpy.ndarray) -> bool:
+        tl = top_left.norm(frame.shape)
+        br = bottom_right.norm(frame.shape)
+
         crop = frame[tl.y:br.y, tl.x:br.x]
         hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, hsv_low, hsv_high)

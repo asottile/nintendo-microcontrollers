@@ -1,3 +1,6 @@
 [submodule "lufa"]
 	path = hw/switch/lufa
 	url = https://github.com/abcminiuser/lufa.git
+[submodule "hw/gamecube/libs/Nintendo"]
+	path = hw/gamecube/libs/Nintendo
+	url = https://github.com/Nicohood/Nintendo
