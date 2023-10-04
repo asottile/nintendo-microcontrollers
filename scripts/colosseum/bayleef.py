@@ -115,7 +115,13 @@ def main() -> int:
         **bootup('INITIAL', 'STAIR1'),
         'STAIR1': (
             (
-                always_matches,
+                region_colorish(
+                    Point(y=138, x=515),
+                    Point(y=201, x=693),
+                    (55, 110, 150),
+                    (75, 230, 230),
+                    .1,
+                ),
                 do(
                     Press('q', duration=.75), Wait(.1),
                     Press('w', duration=1.5), Wait(.1),

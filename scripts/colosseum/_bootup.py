@@ -58,19 +58,6 @@ def bootup(start: str, end: str) -> States:
                     .9,
                 ),
                 do(Press('A'), Wait(.5), Press('w'), Press('A')),
-                f'{start}__WAIT_FOR_PC',
-            ),
-        ),
-        f'{start}__WAIT_FOR_PC': (
-            (
-                region_colorish(
-                    Point(y=138, x=515),
-                    Point(y=201, x=693),
-                    (55, 110, 150),
-                    (75, 230, 230),
-                    .1,
-                ),
-                do(),
                 end,
             ),
         ),
