@@ -15,6 +15,12 @@ control various nintendo consoles with arduino!
 
 ![](https://user-images.githubusercontent.com/1810591/265853650-d02344e2-5072-4d2c-b17f-9944de57c485.jpg)
 
+## nintendo gamecube
+
+[more details](hw/gamecube)
+
+![](https://user-images.githubusercontent.com/1810591/273344828-1895eab3-26d1-400c-85f0-54a6e0e69b27.jpg)
+
 #### migrated
 
 this repository was stitched together with `git filter-branch`
