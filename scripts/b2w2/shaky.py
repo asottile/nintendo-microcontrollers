@@ -149,10 +149,7 @@ def main() -> int:
             for c, n in shaky
             for _ in range(n)
         ]
-        do(
-            Press('Y'), Wait(.75), Press('Y'), Wait(.75),
-            *ops,
-        )(vid, ser)
+        do(Press('Y'), Wait(.3), *ops)(vid, ser)
 
         shaky = None
 
@@ -249,11 +246,7 @@ def main() -> int:
             ),
         ),
         'ON_BIKE': (
-            (
-                world,
-                do(Press('Y'), Wait(.75), Press('Y'), Wait(1)),
-                'INITIAL',
-            ),
+            (world, do(Press('Y'), Wait(.3)), 'INITIAL'),
         ),
         **alarm('ALARM'),
     }
