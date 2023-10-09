@@ -165,7 +165,7 @@ def main() -> int:
     def is_1_75(frame: object) -> bool:
         return pokemon in {
             'ribombee', 'shiinotic', 'golisopod', 'sliggoo', 'drakloak',
-            'exeggutor',
+            'exeggutor', 'sylveon',
         }
 
     states: States = {
