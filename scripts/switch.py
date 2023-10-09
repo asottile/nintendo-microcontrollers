@@ -208,7 +208,7 @@ def main() -> int:
     subparsers.required = True
 
     clock_parser = subparsers.add_parser('clock')
-    clock_parser.add_argument('--serial', default='/dev/ttyUSB0')
+    clock_parser.add_argument('--serial', default=SERIAL_DEFAULT)
     clock_parser.add_argument('dt', type=datetime.datetime.fromisoformat)
     args = parser.parse_args()
 
