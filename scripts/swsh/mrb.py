@@ -154,7 +154,7 @@ def main() -> int:
         pokemon = text.removesuffix(' appeared!').lower()
 
     def is_2_75(frame: object) -> bool:
-        return pokemon in {'dragapult'}
+        return pokemon in {'dragapult', 'frosmoth'}
 
     def is_2_5(frame: object) -> bool:
         return pokemon in {'dusknoir', 'togekiss'}
@@ -165,7 +165,7 @@ def main() -> int:
     def is_1_75(frame: object) -> bool:
         return pokemon in {
             'ribombee', 'shiinotic', 'golisopod', 'sliggoo', 'drakloak',
-            'exeggutor', 'sylveon', 'grapploct', 'falinks',
+            'exeggutor', 'sylveon', 'grapploct', 'falinks', 'mamoswine',
         }
 
     states: States = {
