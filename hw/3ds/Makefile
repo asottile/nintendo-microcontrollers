@@ -25,6 +25,7 @@ _AVR_CPP_O := $(filter-out main.cpp.o,$(_AVR_CPP_O))
 _OBJECTS = $(addprefix out/,main.cpp.o $(_AVR_S_O) $(_AVR_C_O) $(_AVR_CPP_O))
 
 CFLAGS := \
+    -flto \
     -Os \
     -DF_CPU=$(_F_CPU) \
     -DUSB_VID=0xbaad \

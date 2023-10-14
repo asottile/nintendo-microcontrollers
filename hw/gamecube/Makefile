@@ -28,6 +28,7 @@ _NINTENDO_C_O := $(addprefix Nintendo__,$(notdir $(_NINTENDO_C:.c=.c.o)))
 _OBJECTS = $(addprefix out/,main.cpp.o $(_NINTENDO_C_O) $(_AVR_S_O) $(_AVR_C_O) $(_AVR_CPP_O))
 
 CFLAGS := \
+    -flto \
     -Os \
     -DARDUINO_ARCH_AVR \
     -DF_CPU=$(_F_CPU) \
