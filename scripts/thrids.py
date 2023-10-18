@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import argparse
 import subprocess
+from typing import NamedTuple
 
 import cv2
 import numpy
+import serial
 
 from scripts.engine import always_matches
 from scripts.engine import do
@@ -72,3 +75,52 @@ def alarm(name: str) -> States:
             ),
         ),
     }
+
+
+_POS = 1 << 7
+_X = 1 << 6
+_HIGH = 1 << 5
+_MASK = _HIGH - 1
+
+
+def touch(ser: serial.Serial, *, x: int, y: int) -> None:
+    assert 0 <= x < 320 and 0 <= y < 240, (x, y)
+    print(f'touch({x=}, {y=})')
+    bts = bytes([
+        _POS | _X | _HIGH | (((_MASK << 5) & x) >> 5),
+        _POS | _X | 0 | (_MASK & x),
+        _POS | 0 | _HIGH | (((_MASK << 5) & y) >> 5),
+        _POS | 0 | 0 | (_MASK & y),
+        *b't',
+    ])
+    ser.write(bts)
+
+
+class Touch(NamedTuple):
+    x: int
+    y: int
+
+    def __call__(self, vid: object, ser: serial.Serial) -> None:
+        touch(ser, x=self.x, y=self.y)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest='command', required=True)
+
+    touch_parser = subparsers.add_parser('touch')
+    touch_parser.add_argument('--serial', default=SERIAL_DEFAULT)
+    touch_parser.add_argument('x', type=int)
+    touch_parser.add_argument('y', type=int)
+    args = parser.parse_args()
+
+    if args.command == 'touch':
+        with serial.Serial(args.serial, 9600) as ser:
+            touch(ser, x=args.x, y=args.y)
+    else:
+        raise AssertionError(f'unreachable: {args.command=}')
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

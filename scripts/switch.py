@@ -204,8 +204,7 @@ def clock(dt: datetime.datetime, name: str, end: str) -> States:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(dest='command')
-    subparsers.required = True
+    subparsers = parser.add_subparsers(dest='command', required=True)
 
     clock_parser = subparsers.add_parser('clock')
     clock_parser.add_argument('--serial', default=SERIAL_DEFAULT)
