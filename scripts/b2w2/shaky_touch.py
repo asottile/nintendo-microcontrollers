@@ -232,7 +232,7 @@ def main() -> int:
             ),
         ),
         'RL': (
-            (powerup.expired, do(), 'POWERUP'),
+            (powerup.expired, nl, 'POWERUP'),
             (
                 is_shaky,
                 do(move_shaky, encounter_timeout.after(10)),
@@ -293,13 +293,13 @@ def main() -> int:
         ),
         'DECIDE': (
             (is_shiny, do(), 'ALARM'),
-            (always_matches, do(), 'RUN'),
+            (always_matches, Wait(.25), 'RUN'),
         ),
         'RUN': (
             (always_matches, Touch(x=160, y=230), 'ON_BIKE'),
         ),
         'ON_BIKE': (
-            (world, do(Press('Y'), Wait(.3)), 'BEGIN'),
+            (world, do(Wait(.5), Press('Y'), Wait(.3)), 'BEGIN'),
         ),
         **alarm('ALARM'),
     }
