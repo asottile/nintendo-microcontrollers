@@ -1,8 +1,7 @@
 from __future__ import annotations
 
+import functools
 import os
-import shutil
-import subprocess
 import time
 from collections.abc import Mapping
 from typing import NamedTuple
@@ -12,6 +11,8 @@ from typing import Protocol
 import cv2
 import numpy
 import serial
+import tessdata
+import tesserocr
 
 SHOW = not os.environ.get('NOSHOW')
 
@@ -21,11 +22,6 @@ def make_vid() -> cv2.VideoCapture:
     vid.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     return vid
-
-
-def require_tesseract() -> None:
-    if not shutil.which('tesseract'):
-        raise SystemExit('need to install `tesseract-ocr`')
 
 
 def getframe(vid: cv2.VideoCapture) -> numpy.ndarray:
@@ -159,12 +155,39 @@ def match_px_exact(px: Point, c: Color) -> Matcher:
     return match_px_exact_impl
 
 
+@functools.lru_cache
+def _tessapi() -> tesserocr.PyTessBaseAPI:
+    return tesserocr.PyTessBaseAPI(
+        tessdata.data_path(),
+        'eng',
+        psm=tesserocr.PSM.SINGLE_LINE,
+    )
+
+
+def tess_text_u8(
+        img: numpy.ndarray,
+        *,
+        tessapi: tesserocr.PyTessBaseAPI | None = None,
+) -> str:
+    tessapi = tessapi or _tessapi()
+
+    tessapi.SetImageBytes(
+        img.tobytes(),
+        width=img.shape[1],
+        height=img.shape[0],
+        bytes_per_pixel=1,
+        bytes_per_line=img.shape[1],
+    )
+    return tessapi.GetUTF8Text().strip()
+
+
 def get_text(
         frame: numpy.ndarray,
         top_left: Point,
         bottom_right: Point,
         *,
         invert: bool,
+        tessapi: tesserocr.PyTessBaseAPI | None = None,
 ) -> str:
     tl_norm = top_left.norm(frame.shape)
     br_norm = bottom_right.norm(frame.shape)
@@ -177,11 +200,7 @@ def get_text(
     if invert:
         crop = cv2.bitwise_not(crop)
 
-    return subprocess.check_output(
-        ('tesseract', '-', '-', '--psm', '7'),
-        input=cv2.imencode('.png', crop)[1].tobytes(),
-        stderr=subprocess.DEVNULL,
-    ).strip().decode()
+    return tess_text_u8(crop, tessapi=tessapi)
 
 
 def match_text(

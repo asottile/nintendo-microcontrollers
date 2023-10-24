@@ -19,7 +19,6 @@ from scripts.engine import match_px
 from scripts.engine import match_text
 from scripts.engine import Point
 from scripts.engine import Press
-from scripts.engine import require_tesseract
 from scripts.engine import run
 from scripts.engine import Wait
 from scripts.switch import SERIAL_DEFAULT
@@ -59,8 +58,6 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
     args = parser.parse_args()
-
-    require_tesseract()
 
     raid_color = Color(-1, -1, -1)
 

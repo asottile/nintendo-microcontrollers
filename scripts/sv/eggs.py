@@ -16,7 +16,6 @@ from scripts.engine import match_px
 from scripts.engine import match_text
 from scripts.engine import Point
 from scripts.engine import Press
-from scripts.engine import require_tesseract
 from scripts.engine import run
 from scripts.engine import Wait
 from scripts.switch import SERIAL_DEFAULT
@@ -27,8 +26,6 @@ def main() -> int:
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
     parser.add_argument('--boxes', type=int, default=1)
     args = parser.parse_args()
-
-    require_tesseract()
 
     start_time = 0.0
     egg_count = 0

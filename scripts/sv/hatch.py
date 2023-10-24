@@ -16,7 +16,6 @@ from scripts.engine import match_px
 from scripts.engine import match_text
 from scripts.engine import Point
 from scripts.engine import Press
-from scripts.engine import require_tesseract
 from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
@@ -32,8 +31,6 @@ def main() -> int:
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
     parser.add_argument('--boxes', type=int, required=True)
     args = parser.parse_args()
-
-    require_tesseract()
 
     box = 0
     column = 0

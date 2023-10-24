@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import subprocess
 from typing import NamedTuple
 
 import cv2
@@ -14,6 +13,7 @@ from scripts.engine import Matcher
 from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import States
+from scripts.engine import tess_text_u8
 from scripts.engine import Wait
 
 SERIAL_DEFAULT = '/dev/ttyACM0'
@@ -58,11 +58,7 @@ def get_text_rotated(
     if invert:
         crop = cv2.bitwise_not(crop)
 
-    return subprocess.check_output(
-        ('tesseract', '-', '-', '--psm', '7'),
-        input=cv2.imencode('.png', crop)[1].tobytes(),
-        stderr=subprocess.DEVNULL,
-    ).strip().decode()
+    return tess_text_u8(crop)
 
 
 def alarm(name: str) -> States:

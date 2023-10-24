@@ -13,7 +13,6 @@ from scripts.engine import match_px
 from scripts.engine import match_text
 from scripts.engine import Point
 from scripts.engine import Press
-from scripts.engine import require_tesseract
 from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
@@ -27,8 +26,6 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
     args = parser.parse_args()
-
-    require_tesseract()
 
     pos0_matches = match_px(Point(y=169, x=372), Color(b=42, g=197, r=213))
     pos1_matches = match_px(Point(y=251, x=366), Color(b=47, g=189, r=220))
