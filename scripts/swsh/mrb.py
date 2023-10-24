@@ -157,7 +157,7 @@ def main() -> int:
         return pokemon in {'dragapult', 'frosmoth'}
 
     def is_2_5(frame: object) -> bool:
-        return pokemon in {'dusknoir', 'togekiss'}
+        return pokemon in {'dusknoir', 'togekiss', 'gourgeist', 'palossand'}
 
     def is_2_0(frame: object) -> bool:
         return pokemon in {'aromatisse', 'dottler', 'drampa'}
@@ -166,6 +166,7 @@ def main() -> int:
         return pokemon in {
             'ribombee', 'shiinotic', 'golisopod', 'sliggoo', 'drakloak',
             'exeggutor', 'sylveon', 'grapploct', 'falinks', 'mamoswine',
+            'sandygast',
         }
 
     states: States = {
