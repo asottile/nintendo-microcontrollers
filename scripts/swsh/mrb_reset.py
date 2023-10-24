@@ -158,9 +158,17 @@ def main() -> int:
             return n in args.stars
         return requested_impl
 
+    first = True
     seen: list[numpy.ndarray] = []
 
     def check(frame: numpy.ndarray) -> bool:
+        nonlocal first
+
+        if first:
+            print('skipping first!')
+            first = False
+            return False
+
         tl = Point(y=287, x=207)
         br = Point(y=476, x=408)
         crop = frame[tl.y:br.y, tl.x:br.x]
