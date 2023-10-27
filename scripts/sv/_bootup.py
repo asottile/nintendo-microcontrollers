@@ -8,6 +8,7 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.switch import game_start
 from scripts.switch import GameCrash
 
 world = match_px(Point(y=598, x=1160), Color(b=17, g=203, r=244))
@@ -18,16 +19,7 @@ def bootup(start: str, success: str, fail: str) -> States:
 
     return {
         start: (
-            (
-                match_text(
-                    'Start',
-                    Point(y=669, x=1158),
-                    Point(y=700, x=1228),
-                    invert=False,
-                ),
-                do(Press('A'), Wait(1)),
-                f'{start}__CONTINUE',
-            ),
+            (game_start, do(Press('A'), Wait(1)), f'{start}__CONTINUE'),
         ),
         f'{start}__CONTINUE': (
             (

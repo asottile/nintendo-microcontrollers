@@ -9,6 +9,12 @@ control various nintendo consoles with arduino!
 
 ![](https://user-images.githubusercontent.com/1810591/114293095-2ab8a980-9a48-11eb-9b35-290d58786701.jpg)
 
+## nintendo switch joycon
+
+[more details](hw/joycon)
+
+![](https://user-images.githubusercontent.com/1810591/278831913-0750550a-4dcf-4af3-a926-f26d6868b54c.jpg)
+
 ## nintendo 3ds (with touch!)
 
 [more details](hw/3ds-touch)

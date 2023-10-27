@@ -25,10 +25,10 @@ from scripts.engine import Wait
 from scripts.switch import alarm
 from scripts.switch import clock
 from scripts.switch import current_dt
+from scripts.switch import game_start
 from scripts.switch import reset
 from scripts.switch import SERIAL_DEFAULT
 from scripts.swsh._bootup import bootup
-from scripts.swsh._bootup import game_start
 from scripts.swsh._bootup import world
 from scripts.swsh._dialog_shiny_check import dialog
 from scripts.swsh._dialog_shiny_check import dialog_shiny_check

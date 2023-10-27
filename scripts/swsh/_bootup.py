@@ -11,17 +11,9 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.switch import game_start
 from scripts.switch import GameCrash
 
-game_start = all_match(
-    match_px(Point(y=61, x=745), Color(b=217, g=217, r=217)),
-    match_text(
-        'Start',
-        Point(y=669, x=1158),
-        Point(y=700, x=1228),
-        invert=False,
-    ),
-)
 world = all_match(
     match_px(Point(y=701, x=31), Color(b=239, g=88, r=44)),
     match_px(Point(y=701, x=14), Color(b=234, g=234, r=234)),

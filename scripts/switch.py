@@ -9,12 +9,15 @@ import cv2
 import numpy
 import serial
 
+from scripts.engine import all_match
 from scripts.engine import always_matches
 from scripts.engine import bye
+from scripts.engine import Color
 from scripts.engine import do
 from scripts.engine import get_text
 from scripts.engine import getframe
 from scripts.engine import make_vid
+from scripts.engine import match_px
 from scripts.engine import match_text
 from scripts.engine import Point
 from scripts.engine import Press
@@ -25,6 +28,16 @@ from scripts.engine import Wait
 SERIAL_DEFAULT = 'COM1' if sys.platform == 'win32' else '/dev/ttyUSB0'
 
 reset = do(Press('H'), Wait(1), Press('X'), Wait(.5), Press('A'), Wait(2.5))
+
+game_start = all_match(
+    match_px(Point(y=61, x=745), Color(b=217, g=217, r=217)),
+    match_text(
+        'Start',
+        Point(y=669, x=1158),
+        Point(y=700, x=1228),
+        invert=False,
+    ),
+)
 
 
 class GameCrash:
