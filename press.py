@@ -20,7 +20,7 @@ def main() -> int:
         for _ in range(args.count):
             ser.write(args.key.encode())
             time.sleep(args.duration)
-            ser.write(b'0')
+            ser.write(b'.')
             time.sleep(.05)
     return 0
 
