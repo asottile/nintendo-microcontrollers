@@ -15,7 +15,6 @@ from scripts.engine import bye
 from scripts.engine import Color
 from scripts.engine import do
 from scripts.engine import get_text
-from scripts.engine import getframe
 from scripts.engine import make_vid
 from scripts.engine import match_px
 from scripts.engine import match_text
@@ -85,47 +84,6 @@ def alarm(name: str, *, quiet: bool) -> States:
         }
 
 
-_TO_CLOCK = do(
-    Press('s'),
-    Press('d', duration=.55),
-    Press('A'), Wait(1),
-    Press('s', duration=1.3),
-    Press('A'), Wait(.75),
-    Press('s', duration=.7),
-    Press('A'), Wait(.75),
-)
-
-
-def current_dt(vid: cv2.VideoCapture, ser: serial.Serial) -> datetime.datetime:
-    _TO_CLOCK(vid, ser)
-
-    text = get_text(
-        getframe(vid),
-        Point(y=370, x=815),
-        Point(y=401, x=1048),
-        invert=False,
-    )
-    date, time, ampm = text.lower().replace('.', '').split()
-    month_s, day_s, year_s = date.split('/')
-    hour_s, minute_s = time.split(':')
-
-    hour = int(hour_s) % 12
-    if ampm == 'pm':
-        hour += 12
-
-    ret = datetime.datetime(
-        year=int(year_s),
-        month=int(month_s),
-        day=int(day_s),
-        hour=hour,
-        minute=int(minute_s),
-    )
-
-    do(Press('H'), Wait(1))(vid, ser)
-
-    return ret
-
-
 def clock(dt: datetime.datetime, name: str, end: str) -> States:
     def _state(tl: Point, br: Point, n: int, s: str, e: str) -> States:
         found_n = -1
@@ -159,7 +117,18 @@ def clock(dt: datetime.datetime, name: str, end: str) -> States:
         name: (
             (
                 always_matches,
-                do(_TO_CLOCK, Press('s'), Press('s'), Press('A'), Wait(.5)),
+                do(
+                    Press('s'),
+                    Press('d', duration=.55),
+                    Press('A'), Wait(1),
+                    Press('s', duration=1.3),
+                    Press('A'), Wait(.75),
+                    Press('s', duration=.7),
+                    Press('A'), Wait(.75),
+                    Press('s'),
+                    Press('s'),
+                    Press('A'), Wait(.5),
+                ),
                 f'{name}_MONTH',
             ),
         ),

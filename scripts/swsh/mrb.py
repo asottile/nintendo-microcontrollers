@@ -24,8 +24,6 @@ from scripts.engine import States
 from scripts.engine import Wait
 from scripts.switch import alarm
 from scripts.switch import clock
-from scripts.switch import current_dt
-from scripts.switch import game_start
 from scripts.switch import reset
 from scripts.switch import SERIAL_DEFAULT
 from scripts.swsh._bootup import bootup
@@ -48,12 +46,7 @@ def main() -> int:
     parser.add_argument('--quiet', action='store_true'),
     args = parser.parse_args()
 
-    dt = datetime.datetime.today()
-
-    def determine_date(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
-        nonlocal dt
-        dt = current_dt(vid, ser).replace(hour=1, minute=0)
-        print(f'current date is {dt.date()}')
+    dt = datetime.datetime(2020, 1, 1, 1, 0)
 
     def increment_date(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
         nonlocal dt
@@ -170,10 +163,7 @@ def main() -> int:
         }
 
     states: States = {
-        'INITIAL': (
-            (game_start, determine_date, 'BOOTUP'),
-        ),
-        **bootup('BOOTUP', 'INCREMENT1'),
+        **bootup('INITIAL', 'INCREMENT1'),
         **do_increment_date('INCREMENT1', 'SAVE'),
         'SAVE': (
             (
@@ -217,7 +207,7 @@ def main() -> int:
         **dialog_shiny_check('DIALOG_1_75', 'RESET', 'ALARM', cutoff=1.75),
         **dialog_shiny_check('DIALOG', 'RESET', 'ALARM', cutoff=1.25),
         'RESET': (
-            (always_matches, reset, 'BOOTUP'),
+            (always_matches, reset, 'INITIAL'),
         ),
         **alarm('ALARM', quiet=args.quiet),
     }

@@ -24,8 +24,6 @@ from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
 from scripts.switch import clock
-from scripts.switch import current_dt
-from scripts.switch import game_start
 from scripts.switch import reset
 from scripts.switch import SERIAL_DEFAULT
 from scripts.swsh._bootup import bootup
@@ -53,12 +51,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    dt = datetime.datetime.today()
-
-    def determine_date(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
-        nonlocal dt
-        dt = current_dt(vid, ser).replace(hour=1, minute=0)
-        print(f'current date is {dt.date()}')
+    dt = datetime.datetime(2020, 1, 1, 1, 0)
 
     def increment_date(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
         nonlocal dt
@@ -191,10 +184,7 @@ def main() -> int:
             return False
 
     states: States = {
-        'INITIAL': (
-            (game_start, determine_date, 'BOOTUP'),
-        ),
-        **bootup('BOOTUP', 'SKIP1'),
+        **bootup('INITIAL', 'SKIP1'),
         **do_increment_date('SKIP1', 'SKIP2'),
         **do_increment_date('SKIP2', 'SKIP3'),
         **do_increment_date('SKIP3', 'TO_DEN'),
@@ -211,7 +201,7 @@ def main() -> int:
             (stars(3), do(), 'RESET'),
         ),
         'RESET': (
-            (always_matches, reset, 'BOOTUP'),
+            (always_matches, reset, 'INITIAL'),
         ),
     }
 
