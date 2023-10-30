@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import functools
-import os.path
 
 import cv2
 import numpy
@@ -21,37 +19,11 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import Wait
+from scripts.sv._raid import raid_type
 from scripts.switch import SERIAL_DEFAULT
 
 
 RAID_STRIPE_POS = Point(y=147, x=1106)
-
-
-def _extract_type(
-        im: numpy.ndarray,
-        dims: tuple[int, int, int],
-) -> numpy.ndarray:
-    im = cv2.resize(im, (dims[1], dims[0]))
-
-    top_left = Point(y=102, x=1006).norm(dims)
-    bottom_right = Point(y=196, x=1095).norm(dims)
-    crop = im[top_left.y:bottom_right.y, top_left.x:bottom_right.x]
-
-    color = numpy.array([71, 51, 39])
-    t = numpy.array([1, 1, 1])
-    return cv2.inRange(crop, color - t * 20, color + t * 20)
-
-
-@functools.lru_cache
-def _get_type_images(
-        dims: tuple[int, int, int],
-) -> tuple[tuple[str, numpy.ndarray], ...]:
-    types_dir = os.path.join(os.path.dirname(__file__), 'types')
-
-    return tuple(
-        (tp, _extract_type(cv2.imread(os.path.join(types_dir, tp)), dims))
-        for tp in os.listdir(types_dir)
-    )
 
 
 def main() -> int:
@@ -71,15 +43,12 @@ def main() -> int:
         px = frame[RAID_STRIPE_POS.norm(frame.shape)]
         raid_color = Color(b=int(px[0]), g=int(px[1]), r=int(px[2]))
 
-        type_images = _get_type_images(frame.shape)
-
-        tp_im = _extract_type(frame, frame.shape)
-        _, tp = max(((im == tp_im).mean(), fname) for fname, im in type_images)
+        tp = raid_type(frame)
         print(f'the type is {tp}')
 
         if tp in {
-                'electric.png', 'grass.png', 'ground.png', 'dragon.png',
-                'normal.png', 'ice.png', 'rock.png', 'steel.png', 'dark.png',
+                'electric', 'grass', 'ground', 'dragon',
+                'normal', 'ice', 'rock', 'steel', 'dark',
         }:
             do(
                 Press('s'), Wait(1),

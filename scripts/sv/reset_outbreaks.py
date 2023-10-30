@@ -15,6 +15,7 @@ from scripts.engine import request_box
 from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.sv._skip_day import skip_day
 from scripts.switch import SERIAL_DEFAULT
 
 
@@ -101,19 +102,7 @@ def main() -> int:
                     invert=False,
                 ),
                 do(
-                    Press('H'), Wait(1),
-                    Press('s'),
-                    Press('d', duration=.55),
-                    Press('A'), Wait(1),
-                    Press('s', duration=1.3),
-                    Press('A'), Wait(.75),
-                    Press('s', duration=.7),
-                    Press('A'), Wait(.75),
-                    Press('s'), Press('s'),
-                    Press('A'), Wait(.75),
-                    Press('d'), Press('w'),
-                    Press('d', duration=.6), Wait(.2), Press('A'), Wait(.75),
-                    Press('H'), Wait(1), Press('H'), Wait(2),
+                    skip_day,
                     Press('Y'), Wait(1),
                     Press('Y'), Wait(2),
                     Press('l'), Wait(1),

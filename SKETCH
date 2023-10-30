@@ -1,0 +1,56 @@
+setup:
+- save in front of a raid crystal
+- automatic send to box on
+- date setting to manual
+
+sil:
+    tl = Point(y=231, x=775)
+    br = Point(y=401, x=973)
+
+
+1. start outside the game
+2. boot into game
+3. date skip (!!! too many date skips: reset the game)
+    4. if no raid crystal goto 3
+5. enter raid
+6. figure out the star count & what pokemon it is (silouhette)
+    7. if it's not a pokemon we want, goto 3
+8. detect what raid type it is
+9. switch to the best raid pokemon for that type
+    -> flying / water: miraidon (spam A)
+    -> dark / rock / normal: koraidon (spam A)
+    -> ground: lurantis (spam A)
+    -> dragon / grass / electric: iron hands (belly drum + drain punch)
+    -> bellibolt (acid spray (x N), electric giga drain)
+
+    -> bellibolt (acid spray (-2 spdef), electric giga drain)
+        - bad against electric, ground, dragon, grass
+    -> lurantis (grass attack) -> spam A EZ
+    -> miraidon (electric attack) -> spam A EZ
+    -> koraidon (fighting attack) -> spam A EZ
+    -> iron hands (belly drum + drain punch) -> difficult
+    -> ground: (serperior after dlc2 -- for now lurantis)
+    -> dragon: ???
+    -> grass: ???
+    -> electric: ???
+10. do raid
+    - figure out strat and follow it!
+
+    11. if we lose: goto 3
+12. catch the pokemon
+13. determine if it is shiny
+    14. release if it is not
+15. goto 3
+
+
+sv-raids/
+    3/
+        NO
+    4/
+        yes/
+            00.png
+            01.png
+        no/
+            01.png
+    5/
+        ...

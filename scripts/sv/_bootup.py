@@ -24,6 +24,16 @@ def bootup(start: str, success: str, fail: str) -> States:
         f'{start}__CONTINUE': (
             (
                 match_text(
+                    'Unplayable downloadable content or update data',
+                    Point(y=221, x=322),
+                    Point(y=262, x=954),
+                    invert=False,
+                ),
+                do(Press('w'), Wait(.25), Press('A')),
+                f'{start}__CONTINUE',
+            ),
+            (
+                match_text(
                     'PRESS',
                     Point(y=489, x=802),
                     Point(y=530, x=898),
