@@ -28,7 +28,7 @@ from scripts.engine import Wait
 
 SERIAL_DEFAULT = 'COM1' if sys.platform == 'win32' else '/dev/ttyUSB0'
 
-reset = do(Press('H'), Wait(1), Press('X'), Wait(.5), Press('A'), Wait(2.5))
+reset = do(Press('H'), Wait(1), Press('X'), Wait(.5), Press('A'), Wait(3))
 
 game_start = all_match(
     match_px(Point(y=61, x=745), Color(b=217, g=217, r=217)),

@@ -164,6 +164,11 @@ def _select_stars() -> list[tuple[str, numpy.ndarray]]:
     return _imgs(os.path.join(_HERE, 'select-stars'))
 
 
+@functools.lru_cache
+def _large_stars() -> list[tuple[str, numpy.ndarray]]:
+    return _imgs(os.path.join(_HERE, 'large-stars'))
+
+
 def _best(
         crop: numpy.ndarray,
         candidates: list[tuple[str, numpy.ndarray]],
@@ -176,6 +181,13 @@ def _best(
             best_name = name
             best_diff = diff
     return best_name
+
+
+def large_star_count(frame: numpy.ndarray) -> str:
+    tl_stars = Point(y=399, x=706)
+    br_stars = Point(y=453, x=1055)
+    crop = frame[tl_stars.y:br_stars.y, tl_stars.x:br_stars.x]
+    return _best(crop, _large_stars()).split('-')[0]
 
 
 def _poke_mask(crop: numpy.ndarray) -> numpy.ndarray:
@@ -217,6 +229,10 @@ def select_pokemon(frame: numpy.ndarray) -> list[list[str | None]]:
                 ret[p_y].append(f'{star} {poke}')
 
     return ret
+
+
+def raid_pokemon(frame: numpy.ndarray) -> str:
+    return _best(_poke_mask(frame[145:380, 763:998]), _sprites((235, 235)))
 
 
 @functools.lru_cache(maxsize=1)
