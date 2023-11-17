@@ -33,14 +33,14 @@ int main() {
 
         pinMode(PIN_RESET, c == '*' ? OUTPUT : INPUT);
 
-        pinMode(PIN_A, c == 'A' ? OUTPUT : INPUT);
-        pinMode(PIN_B, (c == 'B' || c == '~') ? OUTPUT : INPUT);
+        pinMode(PIN_A, (c == 'A' || c == '@') ? OUTPUT : INPUT);
+        pinMode(PIN_B, (c == 'B' || c == '~' || c == '@') ? OUTPUT : INPUT);
         pinMode(PIN_UP, (c == 'w' || c == '~') ? OUTPUT : INPUT);
         pinMode(PIN_LEFT, c == 'a' ? OUTPUT : INPUT);
         pinMode(PIN_DOWN, c == 's' ? OUTPUT : INPUT);
         pinMode(PIN_RIGHT, c == 'd' ? OUTPUT : INPUT);
-        pinMode(PIN_START, c == '[' ? OUTPUT : INPUT);
-        pinMode(PIN_SELECT, (c == ']' || c == '~') ? OUTPUT : INPUT);
+        pinMode(PIN_START, (c == '[' || c == '@') ? OUTPUT : INPUT);
+        pinMode(PIN_SELECT, (c == ']' || c == '~' || c == '@') ? OUTPUT : INPUT);
         pinMode(PIN_L, c == 'L' ? OUTPUT : INPUT);
         pinMode(PIN_R, c == 'R' ? OUTPUT : INPUT);
 
