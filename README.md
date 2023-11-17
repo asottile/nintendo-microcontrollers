@@ -33,6 +33,12 @@ control various nintendo consoles with arduino!
 
 ![](https://user-images.githubusercontent.com/1810591/273344828-1895eab3-26d1-400c-85f0-54a6e0e69b27.jpg)
 
+## nintendo gba sp
+
+[more details](hw/gba-sp)
+
+![](https://user-images.githubusercontent.com/1810591/283647355-d76345d8-798c-4357-a7bf-8ae44b05d2d8.jpg)
+
 #### migrated
 
 this repository was stitched together with `git filter-branch`
