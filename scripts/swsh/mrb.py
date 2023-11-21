@@ -43,7 +43,7 @@ def done(vid: object, ser: object) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
-    parser.add_argument('--quiet', action='store_true'),
+    parser.add_argument('--quiet', action='store_true')
     args = parser.parse_args()
 
     dt = datetime.datetime(2020, 1, 1, 1, 0)

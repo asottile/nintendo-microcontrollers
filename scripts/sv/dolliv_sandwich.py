@@ -108,7 +108,7 @@ def ignored_pokemon(frame: numpy.ndarray) -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
-    parser.add_argument('--quiet', action='store_true'),
+    parser.add_argument('--quiet', action='store_true')
     args = parser.parse_args()
 
     picnic_timer = Timeout()
