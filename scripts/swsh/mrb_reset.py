@@ -62,14 +62,16 @@ def main() -> int:
     first = True
     seen: list[numpy.ndarray] = []
 
-    def check(frame: numpy.ndarray) -> bool:
+    def is_first(frame: object) -> bool:
         nonlocal first
-
         if first:
             print('skipping first!')
             first = False
+            return True
+        else:
             return False
 
+    def check(frame: numpy.ndarray) -> bool:
         tl = Point(y=287, x=207)
         br = Point(y=476, x=408)
         crop = frame[tl.y:br.y, tl.x:br.x]
@@ -101,6 +103,7 @@ def main() -> int:
             (invite_others, do(), 'CHECK'),
         ),
         'CHECK': (
+            (is_first, do(), 'RESET'),
             (all_match(stars(5), requested(5), check), do(), 'UNREACHABLE'),
             (stars(5), do(), 'RESET'),
             (all_match(stars(4), requested(4), check), do(), 'UNREACHABLE'),
