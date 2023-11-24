@@ -18,6 +18,7 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import States
+from scripts.engine import Timeout
 from scripts.engine import Wait
 from scripts.thrids import alarm
 from scripts.thrids import SERIAL_DEFAULT
@@ -54,6 +55,8 @@ def main() -> int:
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
     args = parser.parse_args()
 
+    crash = Timeout()
+
     def is_shiny(frame: numpy.ndarray) -> bool:
         tl = Point(y=140, x=154)
         br = Point(y=149, x=157)
@@ -75,7 +78,11 @@ def main() -> int:
 
     states: States = {
         'INITIAL': (
-            (always_matches, Press('@'), 'WAIT_FOR_JIRACHI_DONE'),
+            (
+                always_matches,
+                do(Press('@'), crash.after(15)),
+                'WAIT_FOR_JIRACHI_DONE',
+            ),
         ),
         'WAIT_FOR_JIRACHI_DONE': (
             (
@@ -88,6 +95,10 @@ def main() -> int:
                 Press('*'),
                 'BOOTUP',
             ),
+            (crash.expired, Press('*'), 'CRASHED'),
+        ),
+        'CRASHED': (
+            (always_matches, Wait(45), 'INITIAL'),
         ),
         **_bootup('BOOTUP', 'TO_JIRACHI'),
         'TO_JIRACHI': (
