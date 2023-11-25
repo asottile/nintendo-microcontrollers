@@ -137,8 +137,23 @@ def main() -> int:
                         invert=False,
                     ),
                 ),
-                do(Press('w'), _confirm),
+                do(Press('w'), _confirm, crash.after(7)),
+                'WAIT_FOR_BOOTUP2',
+            ),
+        ),
+        'WAIT_FOR_BOOTUP2': (
+            (
+                match_px(Point(y=50, x=50), Color(b=0, g=0, r=0)),
+                do(),
                 'BOOTUP2',
+            ),
+            (crash.expired, do(), 'CRASH2'),
+        ),
+        'CRASH2': (
+            (
+                always_matches,
+                do(Press('*'), crash.after(7)),
+                'WAIT_FOR_BOOTUP2',
             ),
         ),
         **_bootup('BOOTUP2', 'SAVE_1'),
