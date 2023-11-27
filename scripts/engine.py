@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import functools
 import os
+import string
 import time
 from collections.abc import Mapping
 from typing import NamedTuple
@@ -162,6 +163,17 @@ def _tessapi() -> tesserocr.PyTessBaseAPI:
         'eng',
         psm=tesserocr.PSM.SINGLE_LINE,
     )
+
+
+@functools.lru_cache
+def tessapi_int() -> tesserocr.PyTessBaseAPI:
+    api = tesserocr.PyTessBaseAPI(
+        tessdata.data_path(),
+        'eng',
+        psm=tesserocr.PSM.SINGLE_LINE,
+    )
+    api.SetVariable('tessedit_char_whitelist', string.digits)
+    return api
 
 
 def tess_text_u8(
