@@ -54,7 +54,12 @@ def main() -> int:
         print(f'found after {taken:.1f} minutes')
 
     def wait(vid: cv2.VideCapture, ser: serial.Serial) -> None:
-        do(Press('-'), Wait(1), Press('w', duration=1), Wait(.5))(vid, ser)
+        do(
+            Press('l'), Wait(1),
+            Press('w', duration=1.5), Wait(.5),
+            Press('-'), Wait(1),
+            Press('w', duration=1), Wait(.5),
+        )(vid, ser)
 
         frame = getframe(vid)
 
@@ -128,8 +133,6 @@ def main() -> int:
 
         do(
             Press('B'), Wait(1),
-            Press('l'), Wait(1),
-            Press('w', duration=.5), Wait(.5),
             # conveniently, pi seconds gives us about a full rotation!
             Press(c, duration=angle / 2),
             Press('w', duration=.2), Wait(.5),
