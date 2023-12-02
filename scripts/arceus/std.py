@@ -25,13 +25,32 @@ from scripts.engine import Timeout
 from scripts.engine import Wait
 from scripts.switch import SERIAL_DEFAULT
 
+HERE = os.path.abspath(os.path.dirname(__file__))
+
 
 @functools.lru_cache(maxsize=1)
 def _std_mask() -> tuple[numpy.ndarray, numpy.ndarray]:
-    here = os.path.dirname(__file__)
-    tmpl = cv2.imread(os.path.join(here, 'templates', 'std-icon.png'))
+    tmpl = cv2.imread(os.path.join(HERE, 'templates', 'std-icon.png'))
     mask = 255 - cv2.inRange(tmpl, tmpl[0][0], tmpl[0][0])
     return tmpl, mask
+
+
+@functools.lru_cache
+def _bird() -> tuple[numpy.ndarray, numpy.ndarray]:
+    tmpl = cv2.imread(os.path.join(HERE, 'templates', 'bird-icon.png'))
+    mask = numpy.any(tmpl == tmpl[0][0], axis=2)
+    return tmpl, mask
+
+
+def is_bird(frame: numpy.ndarray) -> bool:
+    tl = Point(y=487, x=1177)
+    br = Point(y=547, x=1237)
+    crop = frame[tl.y:br.y, tl.x:br.x]
+
+    bird, mask = _bird()
+    crop[numpy.nonzero(mask)] = bird[0][0]
+    avg = float(numpy.average(cv2.absdiff(crop, bird)))
+    return avg < 5
 
 
 def main() -> int:
@@ -55,8 +74,6 @@ def main() -> int:
 
     def wait(vid: cv2.VideCapture, ser: serial.Serial) -> None:
         do(
-            Press('l'), Wait(1),
-            Press('w', duration=1.5), Wait(.5),
             Press('-'), Wait(1),
             Press('w', duration=1), Wait(.5),
         )(vid, ser)
@@ -138,6 +155,7 @@ def main() -> int:
             Press('w', duration=.2), Wait(.5),
             Press('l'), Wait(1),
             Wait(wait),
+            Press('H'), Wait(1),
         )(vid, ser)
 
     states: States = {
@@ -151,15 +169,17 @@ def main() -> int:
                 ),
                 do(
                     display_time,
-                    wait,
-                    Press('H'), Wait(1),
-                    maybe_sleep,
-                    bye,
+                    Press('l'), Wait(1),
+                    Press('w', duration=1.5), Wait(.5),
                 ),
-                'UNREACHABLE',
+                'REORIENT_AND_WAIT',
             ),
             (nudge.expired, do(Press('X'), nudge.after(180)), 'INITIAL'),
             (always_matches, Wait(1), 'INITIAL'),
+        ),
+        'REORIENT_AND_WAIT': (
+            (is_bird, do(wait, maybe_sleep, bye), 'UNREACHABLE'),
+            (always_matches, do(Press('1'), Wait(.5)), 'REORIENT_AND_WAIT'),
         ),
     }
 
