@@ -215,31 +215,9 @@ void HID_Task(uint8_t c) {
     }
 }
 
-typedef struct {
-    char c;
-    uint8_t n;
-} instruction_t;
-
 int main(void) {
     SetupHardware();
     GlobalInterruptEnable();
-
-    {
-        const instruction_t startup[] = {
-            {'.', 250},
-            {'~', 5}, {'.', 150},
-            {'~', 5}, {'.', 150},
-            {'A', 5}, {'.', 250},
-            {'H', 5},
-        };
-
-        for (int i = 0; i < sizeof(startup) / sizeof(instruction_t); i += 1) {
-            for (int j = 0; j < startup[i].n; j += 1) {
-                HID_Task(startup[i].c);
-                USB_USBTask();
-            }
-        }
-    }
 
     // listen for inputs and react
     bool verbose = false;
