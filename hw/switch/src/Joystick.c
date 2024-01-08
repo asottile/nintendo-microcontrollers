@@ -178,6 +178,10 @@ void GetNextReport(USB_JoystickReport_Input_t* report, uint8_t c) {
             report->Button = SWITCH_RCLICK;
             break;
 
+        case 'C':
+            report->Button = SWITCH_CAPTURE;
+            break;
+
         case '1':
             report->HAT = HAT_RIGHT;
             break;

@@ -97,6 +97,7 @@ A: A is pressed
 B: B is pressed
 X: X is pressed
 Y: Y is pressed
+C: Capture is pressed
 H: Home is pressed
 +: + is pressed
 -: - is pressed
