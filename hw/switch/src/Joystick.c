@@ -27,7 +27,7 @@ void EVENT_USB_Device_ConfigurationChanged(void) {
     Endpoint_ConfigureEndpoint(JOYSTICK_IN_EPADDR, EP_TYPE_INTERRUPT, JOYSTICK_EPSIZE, 1);
 }
 
-void GetNextReport(USB_JoystickReport_Input_t* report, uint8_t c) {
+void GetNextReport(USB_JoystickReport_Input_t* report, uint8_t c, uint8_t x, uint8_t y) {
     memset(report, 0, sizeof(USB_JoystickReport_Input_t));
     report->LX = STICK_CENTER;
     report->LY = STICK_CENTER;
@@ -178,6 +178,15 @@ void GetNextReport(USB_JoystickReport_Input_t* report, uint8_t c) {
             report->Button = SWITCH_RCLICK;
             break;
 
+        case '<':
+            report->LX = x;
+            report->LY = y;
+            break;
+        case '>':
+            report->RX = x;
+            report->RY = y;
+            break;
+
         case 'C':
             report->Button = SWITCH_CAPTURE;
             break;
@@ -197,7 +206,7 @@ void GetNextReport(USB_JoystickReport_Input_t* report, uint8_t c) {
     }
 }
 
-void HID_Task(uint8_t c) {
+void HID_Task(uint8_t c, uint8_t x, uint8_t y) {
     if (USB_DeviceState != DEVICE_STATE_Configured)
         return;
 
@@ -213,10 +222,15 @@ void HID_Task(uint8_t c) {
     Endpoint_SelectEndpoint(JOYSTICK_IN_EPADDR);
     if (Endpoint_IsINReady()) {
         USB_JoystickReport_Input_t JoystickInputData;
-        GetNextReport(&JoystickInputData, c);
+        GetNextReport(&JoystickInputData, c, x, y);
         while(Endpoint_Write_Stream_LE(&JoystickInputData, sizeof(JoystickInputData), NULL) != ENDPOINT_RWSTREAM_NoError);
         Endpoint_ClearIN();
     }
+}
+
+uint8_t serial_read_blocking() {
+    while (!Serial_IsCharReceived());
+    return Serial_ReceiveByte();
 }
 
 int main(void) {
@@ -226,6 +240,8 @@ int main(void) {
     // listen for inputs and react
     bool verbose = false;
     char c = '0';
+    uint8_t x = 0;
+    uint8_t y = 0;
     for (;;) {
         if (Serial_IsCharReceived()) {
             char read = Serial_ReceiveByte();
@@ -235,6 +251,10 @@ int main(void) {
             } else if (read == 'v') {
                 verbose = false;
                 Serial_SendString("disabling verbose mode\n");
+            } else if (read == '<' || read == '>') {
+                c = read;
+                x = serial_read_blocking();
+                y = serial_read_blocking();
             } else {
                 c = read;
                 if (verbose) {
@@ -247,7 +267,7 @@ int main(void) {
 
         PORTB = c == '!' ? (1 << 5) : 0;
 
-        HID_Task(c);
+        HID_Task(c, x, y);
         USB_USBTask();
     }
 }
