@@ -4,11 +4,13 @@ import argparse
 import datetime
 import sys
 import time
+from typing import Literal
 
 import cv2
 import numpy
 import serial
 
+from scripts.engine import Action
 from scripts.engine import all_match
 from scripts.engine import always_matches
 from scripts.engine import bye
@@ -54,6 +56,26 @@ class GameCrash:
 
     def check(self, frame: numpy.ndarray) -> bool:
         return time.time() > self.check_after and self.matcher(frame)
+
+
+STICK_MIN = 0
+STICK_0 = 128
+STICK_MAX = 255
+
+
+def stick(
+        s: Literal['<', '>'],
+        *,
+        x: int,
+        y: int,
+        duration: float = .1,
+) -> Action:
+    def stick_impl(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
+        print(f'{s=} {x=} {y=} {duration=}')
+        ser.write(bytes([ord(s), x, y]))
+        time.sleep(duration)
+        ser.write(b'.')
+    return stick_impl
 
 
 def alarm(name: str, *, quiet: bool) -> States:
