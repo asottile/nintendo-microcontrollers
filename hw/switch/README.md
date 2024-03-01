@@ -63,7 +63,7 @@ you have to be quick with this!
 - short `rst` to `gnd` twice in quick succession
 
 ```bash
-sudo avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -Uflash:w:output.hex
+sudo avrdude -v -patmega32u4 -cavr109 -P/dev/ttyACM0 -Uflash:w:main.hex
 ```
 
 use the appropriate `MCU` and serial port for your board, the pro micro uses
