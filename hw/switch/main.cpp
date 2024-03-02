@@ -327,11 +327,11 @@ int main() {
                     Serial1.write('\n');
                 }
             }
+
+            digitalWrite(PIN_BUZZER, c == '!' ? HIGH : LOW);
+
+            make_report(&report, c, x, y);
+            hid.send_report(&report, sizeof(Report_t));
         }
-
-        digitalWrite(PIN_BUZZER, c == '!' ? HIGH : LOW);
-
-        make_report(&report, c, x, y);
-        hid.send_report(&report, sizeof(Report_t));
     }
 }
