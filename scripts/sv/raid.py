@@ -21,6 +21,7 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import Wait
+from scripts.sv._raid import raid_type
 from scripts.switch import SERIAL_DEFAULT
 
 
@@ -71,15 +72,12 @@ def main() -> int:
         px = frame[RAID_STRIPE_POS.norm(frame.shape)]
         raid_color = Color(b=int(px[0]), g=int(px[1]), r=int(px[2]))
 
-        type_images = _get_type_images(frame.shape)
-
-        tp_im = _extract_type(frame, frame.shape)
-        _, tp = max(((im == tp_im).mean(), fname) for fname, im in type_images)
+        tp = raid_type(frame)
         print(f'the type is {tp}')
 
         if tp in {
-                'electric.png', 'grass.png', 'ground.png', 'dragon.png',
-                'normal.png', 'ice.png', 'rock.png', 'steel.png', 'dark.png',
+                'electric', 'grass', 'ground', 'dragon',
+                'normal', 'ice', 'rock', 'steel', 'dark',
         }:
             do(
                 Press('s'), Wait(1),
