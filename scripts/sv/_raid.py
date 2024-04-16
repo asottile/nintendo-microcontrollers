@@ -6,6 +6,7 @@ import os.path
 import cv2
 import numpy
 
+from scripts.engine import match_text
 from scripts.engine import Point
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -88,6 +89,14 @@ def _best(
 
 
 def raid_pokemon(frame: numpy.ndarray) -> list[list[str | None]]:
+    if match_text(
+        'No new postings',
+        Point(y=343, x=420),
+        Point(y=383, x=619),
+        invert=False,
+    )(frame):
+        return [[None] * 4, [None] * 4]
+
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, (100, 80, 55), (125, 160, 80))
     kernel = numpy.ones((3, 3), numpy.uint8)
