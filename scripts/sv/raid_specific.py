@@ -22,6 +22,7 @@ from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
+from scripts.sv._bootup import world
 from scripts.sv._raid import attack_position
 from scripts.sv._raid import raid_pokemon
 from scripts.sv._raid import raid_type
@@ -223,7 +224,7 @@ def main() -> int:
     states: States = {
         'INITIAL': (
             (
-                match_px(Point(y=598, x=1160), Color(b=17, g=203, r=244)),
+                world,
                 do(Wait(1), Press('X'), Wait(1), Press('d'), Wait(.5)),
                 'MENU',
             ),

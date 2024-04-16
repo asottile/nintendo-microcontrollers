@@ -179,7 +179,7 @@ def main() -> int:
         ),
         'HATCH_1': (
             (
-                match_px(Point(y=598, x=1160), Color(b=17, g=203, r=244)),
+                world,
                 egg_hatched,
                 'HATCH_5',
             ),

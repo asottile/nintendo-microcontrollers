@@ -18,6 +18,7 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import Wait
+from scripts.sv._bootup import world
 from scripts.switch import SERIAL_DEFAULT
 
 
@@ -48,7 +49,7 @@ def main() -> int:
     states = {
         'INITIAL': (
             (
-                match_px(Point(y=598, x=1160), Color(b=17, g=203, r=244)),
+                world,
                 do(
                     Wait(1),
                     # center camera
