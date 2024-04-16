@@ -24,6 +24,8 @@ from scripts.engine import States
 from scripts.engine import Wait
 from scripts.sv._bootup import world
 from scripts.sv._raid import attack_position
+from scripts.sv._raid import raid_appeared
+from scripts.sv._raid import raid_communication_error
 from scripts.sv._raid import raid_pokemon
 from scripts.sv._raid import raid_type
 from scripts.switch import SERIAL_DEFAULT
@@ -204,13 +206,6 @@ def main() -> int:
         )
         return text.endswith('has been sent to your Boxes!')
 
-    remaining_time = match_text(
-        'Remaining Time',
-        Point(y=97, x=179),
-        Point(y=129, x=333),
-        invert=False,
-    )
-
     move_select = all_match(
         match_px(Point(y=681, x=571), Color(b=247, g=241, r=242)),
         match_text(
@@ -304,17 +299,12 @@ def main() -> int:
                 'WAIT_FOR_NEW',
             ),
             (
-                match_text(
-                    'Please try again later.',
-                    Point(y=361, x=377),
-                    Point(y=397, x=646),
-                    invert=True,
-                ),
+                raid_communication_error,
                 do(Wait(2), Press('A'), Wait(2), Press('A')),
                 'WAIT_FOR_NEW',
             ),
             (
-                remaining_time,
+                raid_appeared,
                 do(Wait(1), determine_raid_type, select_pokemon),
                 'WAIT_FOR_START',
             ),
@@ -330,7 +320,7 @@ def main() -> int:
                 do(Press('B'), Wait(1)),
                 'WAIT_FOR_NEW',
             ),
-            (remaining_time, Wait(.5), 'WAIT_FOR_START'),
+            (raid_appeared, Wait(.5), 'WAIT_FOR_START'),
             (always_matches, do(), 'RAID'),
         ),
         'RAID': (

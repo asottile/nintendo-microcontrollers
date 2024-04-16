@@ -6,10 +6,57 @@ import os.path
 import cv2
 import numpy
 
+from scripts.engine import any_match
 from scripts.engine import match_text
 from scripts.engine import Point
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
+
+raid_appeared = match_text(
+    'Remaining Time',
+    Point(y=97, x=179),
+    Point(y=129, x=333),
+    invert=False,
+)
+
+raid_communication_error = any_match(
+    match_text(
+        'An error has occurred.',
+        Point(y=239, x=329),
+        Point(y=276, x=614),
+        invert=True,
+    ),
+    match_text(
+        'Please try again later.',
+        Point(y=361, x=326),
+        Point(y=399, x=602),
+        invert=True,
+    ),
+    match_text(
+        'Please try again later.',
+        Point(y=362, x=375),
+        Point(y=398, x=650),
+        invert=True,
+    ),
+    match_text(
+        'Please start again from the beginning.',
+        Point(y=355, x=388),
+        Point(y=385, x=861),
+        invert=True,
+    ),
+    match_text(
+        'Communication with the other Trainer was',
+        Point(y=315, x=373),
+        Point(y=349, x=906),
+        invert=True,
+    ),
+    match_text(
+        'Communication ended due to an error.',
+        Point(y=331, x=393),
+        Point(y=368, x=884),
+        invert=True,
+    ),
+)
 
 
 def _extract_type(

@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 
 import cv2
-import numpy
 import serial
 
 from scripts.engine import all_match
@@ -20,10 +19,10 @@ from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import Wait
 from scripts.sv._bootup import world
+from scripts.sv._raid import raid_appeared
+from scripts.sv._raid import raid_communication_error
 from scripts.sv._raid import raid_type
 from scripts.switch import SERIAL_DEFAULT
-
-RAID_STRIPE_POS = Point(y=147, x=1106)
 
 
 def main() -> int:
@@ -31,17 +30,10 @@ def main() -> int:
     parser.add_argument('--serial', default=SERIAL_DEFAULT)
     args = parser.parse_args()
 
-    raid_color = Color(-1, -1, -1)
-
     def _raid_appeared(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
-        nonlocal raid_color
-
         Wait(1)(vid, ser)
 
         frame = getframe(vid)
-
-        px = frame[RAID_STRIPE_POS.norm(frame.shape)]
-        raid_color = Color(b=int(px[0]), g=int(px[1]), r=int(px[2]))
 
         tp = raid_type(frame)
         print(f'the type is {tp}')
@@ -59,9 +51,6 @@ def main() -> int:
             )(vid, ser)
         else:
             Press('A')(vid, ser)
-
-    def _raid_color_gone(frame: numpy.ndarray) -> bool:
-        return not match_px(RAID_STRIPE_POS, raid_color)(frame)
 
     states = {
         'INITIAL': (
@@ -148,44 +137,7 @@ def main() -> int:
             ),
 
             (
-                any_match(
-                    match_text(
-                        'An error has occurred.',
-                        Point(y=239, x=329),
-                        Point(y=276, x=614),
-                        invert=True,
-                    ),
-                    match_text(
-                        'Please try again later.',
-                        Point(y=361, x=326),
-                        Point(y=399, x=602),
-                        invert=True,
-                    ),
-                    match_text(
-                        'Please try again later.',
-                        Point(y=362, x=375),
-                        Point(y=398, x=650),
-                        invert=True,
-                    ),
-                    match_text(
-                        'Please start again from the beginning.',
-                        Point(y=355, x=388),
-                        Point(y=385, x=861),
-                        invert=True,
-                    ),
-                    match_text(
-                        'Communication with the other Trainer was',
-                        Point(y=315, x=373),
-                        Point(y=349, x=906),
-                        invert=True,
-                    ),
-                    match_text(
-                        'Communication ended due to an error.',
-                        Point(y=331, x=393),
-                        Point(y=368, x=884),
-                        invert=True,
-                    ),
-                ),
+                raid_communication_error,
                 do(
                     Wait(1), Press('A'),
                     Wait(2), Press('A'),
@@ -195,7 +147,6 @@ def main() -> int:
             ),
             (
                 all_match(
-                    match_px(RAID_STRIPE_POS, Color(b=20, g=184, r=227)),
                     match_text(
                         'Even if you are victorious in this Tera Raid Battle,',
                         Point(y=547, x=351),
@@ -207,13 +158,7 @@ def main() -> int:
                 'WAIT_FOR_RAID',
             ),
             (
-                match_px(
-                    RAID_STRIPE_POS,
-                    Color(b=211, g=108, r=153),  # violet
-                    Color(b=60, g=82, r=217),  # scarlet
-                    Color(b=134, g=99, r=86),  # 6 star
-                    Color(b=20, g=184, r=227),  # event
-                ),
+                raid_appeared,
                 _raid_appeared,
                 'RAID_ACCEPTED',
             ),
@@ -232,7 +177,8 @@ def main() -> int:
                 do(Press('B'), Wait(1), Press('A')),
                 'WAIT_FOR_RAID',
             ),
-            (_raid_color_gone, Wait(5), 'RAID'),
+            (raid_appeared, Wait(.5), 'RAID_ACCEPTED'),
+            (always_matches, Wait(5), 'RAID'),
         ),
         'RAID': (
             (
@@ -312,12 +258,11 @@ def main() -> int:
         ),
         'WAIT_FOR_SUCCESS': (
             (
-                match_px(
-                    Point(y=172, x=1123),
-                    Color(b=211, g=108, r=153),  # violet
-                    Color(b=60, g=82, r=217),  # scarlet
-                    Color(b=114, g=85, r=76),  # 6 star
-                    Color(b=64, g=191, r=229),  # event
+                match_text(
+                    'Next',
+                    Point(y=681, x=1219),
+                    Point(y=703, x=1260),
+                    invert=True,
                 ),
                 do(Wait(1), Press('A'), Wait(10)),
                 'INITIAL',
