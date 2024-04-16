@@ -6,9 +6,17 @@ import os.path
 import cv2
 import numpy
 
+from scripts.engine import always_matches
 from scripts.engine import any_match
+from scripts.engine import Color
+from scripts.engine import do
+from scripts.engine import match_px
 from scripts.engine import match_text
 from scripts.engine import Point
+from scripts.engine import Press
+from scripts.engine import States
+from scripts.engine import Wait
+from scripts.sv._bootup import world
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -57,6 +65,58 @@ raid_communication_error = any_match(
         invert=True,
     ),
 )
+
+
+def to_raid_select(start: str, end: str) -> States:
+    return {
+        start: (
+            (
+                world,
+                do(Wait(1), Press('X'), Wait(1), Press('d'), Wait(.5)),
+                'MENU',
+            ),
+        ),
+        'MENU': (
+            (
+                match_px(Point(y=345, x=1166), Color(b=29, g=184, r=210)),
+                do(Wait(1), Press('A')),
+                'WAIT_FOR_PORTAL',
+            ),
+            (always_matches, do(Press('s'), Wait(.5)), 'MENU'),
+        ),
+        'WAIT_FOR_PORTAL': (
+            (
+                match_text(
+                    'Mystery Gift',
+                    Point(y=535, x=122),
+                    Point(y=566, x=241),
+                    invert=True,
+                ),
+                Wait(5),
+                'PORTAL',
+            ),
+        ),
+        'PORTAL': (
+            (
+                match_px(Point(y=315, x=333), Color(b=22, g=198, r=229)),
+                do(Wait(1), Press('A')),
+                'WAIT_FOR_RAID_SELECT',
+            ),
+            (always_matches, do(Press('s'), Wait(.5)), 'PORTAL'),
+        ),
+        'WAIT_FOR_RAID_SELECT': (
+            (
+                match_text(
+                    'TERA RAID BATTLE SEARCH',
+                    Point(y=12, x=75),
+                    Point(y=42, x=374),
+                    invert=True,
+                ),
+                do(),
+                end,
+            ),
+        ),
+    }
 
 
 def _extract_type(

@@ -17,11 +17,12 @@ from scripts.engine import match_text
 from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
+from scripts.engine import States
 from scripts.engine import Wait
-from scripts.sv._bootup import world
 from scripts.sv._raid import raid_appeared
 from scripts.sv._raid import raid_communication_error
 from scripts.sv._raid import raid_type
+from scripts.sv._raid import to_raid_select
 from scripts.switch import SERIAL_DEFAULT
 
 
@@ -52,49 +53,8 @@ def main() -> int:
         else:
             Press('A')(vid, ser)
 
-    states = {
-        'INITIAL': (
-            (
-                world,
-                do(Wait(1), Press('X'), Wait(1), Press('d'), Wait(.5)),
-                'MENU',
-            ),
-        ),
-        'MENU': (
-            (
-                match_px(Point(y=345, x=1166), Color(b=29, g=184, r=210)),
-                do(Wait(1), Press('A')),
-                'WAIT_FOR_PORTAL',
-            ),
-            (always_matches, do(Press('s'), Wait(.5)), 'MENU'),
-        ),
-        'WAIT_FOR_PORTAL': (
-            (
-                match_px(Point(y=676, x=191), Color(b=29, g=163, r=217)),
-                # model takes a while to load
-                Wait(5),
-                'PORTAL',
-            ),
-        ),
-        'PORTAL': (
-            (
-                match_px(Point(y=315, x=333), Color(b=22, g=198, r=229)),
-                do(Wait(1), Press('A')),
-                'WAIT_FOR_RAID_SELECT',
-            ),
-            (always_matches, do(Press('s'), Wait(.5)), 'PORTAL'),
-        ),
-        'WAIT_FOR_RAID_SELECT': (
-            (
-                match_px(
-                    Point(y=676, x=191),
-                    Color(b=156, g=43, r=133),  # violet
-                    Color(b=33, g=98, r=197),  # scarlet
-                ),
-                Wait(1),
-                'RAID_SELECT',
-            ),
-        ),
+    states: States = {
+        **to_raid_select('INTIIAL', 'RAID_SELECT'),
         'RAID_SELECT': (
             # TODO: later we can select based on disabled button
             (

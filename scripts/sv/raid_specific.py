@@ -22,12 +22,12 @@ from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import States
 from scripts.engine import Wait
-from scripts.sv._bootup import world
 from scripts.sv._raid import attack_position
 from scripts.sv._raid import raid_appeared
 from scripts.sv._raid import raid_communication_error
 from scripts.sv._raid import raid_pokemon
 from scripts.sv._raid import raid_type
+from scripts.sv._raid import to_raid_select
 from scripts.switch import SERIAL_DEFAULT
 
 Choice = enum.Enum('Choice', 'ATT_0 ATT_1')
@@ -217,53 +217,7 @@ def main() -> int:
     )
 
     states: States = {
-        'INITIAL': (
-            (
-                world,
-                do(Wait(1), Press('X'), Wait(1), Press('d'), Wait(.5)),
-                'MENU',
-            ),
-        ),
-        'MENU': (
-            (
-                match_px(Point(y=345, x=1166), Color(b=29, g=184, r=210)),
-                do(Wait(1), Press('A')),
-                'WAIT_FOR_PORTAL',
-            ),
-            (always_matches, do(Press('s'), Wait(.5)), 'MENU'),
-        ),
-        'WAIT_FOR_PORTAL': (
-            (
-                match_text(
-                    'Mystery Gift',
-                    Point(y=535, x=122),
-                    Point(y=566, x=241),
-                    invert=True,
-                ),
-                Wait(5),
-                'PORTAL',
-            ),
-        ),
-        'PORTAL': (
-            (
-                match_px(Point(y=315, x=333), Color(b=22, g=198, r=229)),
-                do(Wait(1), Press('A')),
-                'WAIT_FOR_RAID_SELECT',
-            ),
-            (always_matches, do(Press('s'), Wait(.5)), 'PORTAL'),
-        ),
-        'WAIT_FOR_RAID_SELECT': (
-            (
-                match_text(
-                    'TERA RAID BATTLE SEARCH',
-                    Point(y=12, x=75),
-                    Point(y=42, x=374),
-                    invert=True,
-                ),
-                do(),
-                'RAID_SELECT',
-            ),
-        ),
+        **to_raid_select('INITIAL', 'RAID_SELECT'),
         'RAID_SELECT': (
             (
                 always_matches,
