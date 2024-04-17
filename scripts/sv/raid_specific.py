@@ -274,6 +274,11 @@ def main() -> int:
                 do(Press('B'), Wait(1)),
                 'WAIT_FOR_NEW',
             ),
+            (
+                raid_communication_error,
+                do(Wait(2), Press('A'), Wait(2), Press('A')),
+                'WAIT_FOR_NEW',
+            ),
             (raid_appeared, Wait(.5), 'WAIT_FOR_START'),
             (always_matches, do(), 'RAID'),
         ),
