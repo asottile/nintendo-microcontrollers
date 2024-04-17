@@ -38,6 +38,8 @@ REPLACEMENTS = {
     'slowpoke': ('slowpoke', 'slowpoke-galarian'),
     'slowbro': ('slowbro', 'slowbro-galarian'),
     'slowking': ('slowking', 'slowking-galarian'),
+
+    'lycanroc': ('lycanroc-midday', 'lycanroc-midnight', 'lycanroc-dusk'),
 }
 
 
