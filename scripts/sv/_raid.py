@@ -36,14 +36,8 @@ raid_communication_error = any_match(
     ),
     match_text(
         'Please try again later.',
-        Point(y=361, x=326),
-        Point(y=399, x=602),
-        invert=True,
-    ),
-    match_text(
-        'Please try again later.',
-        Point(y=362, x=375),
-        Point(y=398, x=650),
+        Point(y=362, x=272),
+        Point(y=397, x=1012),
         invert=True,
     ),
     match_text(
