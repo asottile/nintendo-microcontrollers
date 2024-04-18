@@ -366,7 +366,7 @@ def main() -> int:
                         invert=False,
                     ),
                 ),
-                do(Press('A'), Wait(.25)),
+                do(Press('A'), Wait(.5)),
                 'CATCH_SELECT_BALL',
             ),
             (
