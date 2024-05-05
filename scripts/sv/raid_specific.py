@@ -21,6 +21,7 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import States
+from scripts.engine import Timeout
 from scripts.engine import Wait
 from scripts.sv._raid import attack_position
 from scripts.sv._raid import raid_appeared
@@ -83,6 +84,8 @@ def main() -> int:
 
     with open(args.targets_file) as f:
         targets = f.read().splitlines()
+
+    tera_debounce = Timeout()
 
     chosen = ''
     chosen_pos = (-1, -1)
@@ -298,12 +301,13 @@ def main() -> int:
             ),
             (
                 all_match(
+                    tera_debounce.expired,
                     move_select,
                     match_px(Point(y=637, x=806), Color(b=232, g=233, r=231)),
                     match_px(Point(y=555, x=800), Color(b=232, g=232, r=232)),
                     match_px(Point(y=556, x=825), Color(b=233, g=235, r=223)),
                 ),
-                do(Press('R'), Wait(.5)),
+                do(Press('R'), Wait(.5), tera_debounce.after(10)),
                 'RAID',
             ),
             (
