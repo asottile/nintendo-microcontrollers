@@ -165,8 +165,8 @@ def _sprites() -> list[tuple[str, numpy.ndarray]]:
 
 
 @functools.lru_cache
-def _stars() -> list[tuple[str, numpy.ndarray]]:
-    stars_dir = os.path.join(_HERE, 'stars')
+def _select_stars() -> list[tuple[str, numpy.ndarray]]:
+    stars_dir = os.path.join(_HERE, 'select-stars')
     return [
         (
             os.path.splitext(fname)[0],
@@ -190,7 +190,7 @@ def _best(
     return best_name
 
 
-def raid_pokemon(frame: numpy.ndarray) -> list[list[str | None]]:
+def select_pokemon(frame: numpy.ndarray) -> list[list[str | None]]:
     if match_text(
         'No new postings',
         Point(y=343, x=420),
@@ -220,7 +220,7 @@ def raid_pokemon(frame: numpy.ndarray) -> list[list[str | None]]:
             if numpy.count_nonzero(poke_crop) == 0:
                 ret[p_y].append(None)
             else:
-                star = _best(star_crop, _stars())
+                star = _best(star_crop, _select_stars())
                 poke = _best(poke_crop, _sprites())
                 ret[p_y].append(f'{star} {poke}')
 

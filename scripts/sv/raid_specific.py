@@ -26,8 +26,8 @@ from scripts.engine import Wait
 from scripts.sv._raid import attack_position
 from scripts.sv._raid import raid_appeared
 from scripts.sv._raid import raid_communication_error
-from scripts.sv._raid import raid_pokemon
 from scripts.sv._raid import raid_type
+from scripts.sv._raid import select_pokemon
 from scripts.sv._raid import to_raid_select
 from scripts.switch import SERIAL_DEFAULT
 
@@ -93,7 +93,7 @@ def main() -> int:
     def detect(vid: cv2.VideoCapture, ser: object) -> None:
         nonlocal chosen, chosen_pos
 
-        pokemon = raid_pokemon(getframe(vid))
+        pokemon = select_pokemon(getframe(vid))
 
         for i, pokes in enumerate(pokemon):
             joined = ', '.join(p or '(none)' for p in pokes)
@@ -135,7 +135,7 @@ def main() -> int:
         nonlocal turn
         turn += 1
 
-    def determine_raid_type(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
+    def choose_strategy(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
         nonlocal tp, strategy, turn
         tp = raid_type(getframe(vid))
         print(f'type is: {tp}')
@@ -180,7 +180,7 @@ def main() -> int:
 
         turn = 0
 
-    def select_pokemon(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
+    def select_attacker(vid: cv2.VideoCapture, ser: serial.Serial) -> None:
         pos = POSITIONS.index(strategy)
         if pos > 0:
             do(
@@ -262,7 +262,7 @@ def main() -> int:
             ),
             (
                 raid_appeared,
-                do(Wait(1), determine_raid_type, select_pokemon),
+                do(Wait(1), choose_strategy, select_attacker),
                 'WAIT_FOR_START',
             ),
         ),
