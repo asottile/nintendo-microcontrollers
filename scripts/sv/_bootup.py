@@ -29,7 +29,7 @@ def bootup(start: str, success: str, fail: str) -> States:
                     Point(y=530, x=898),
                     invert=True,
                 ),
-                do(Wait(2), Press('A'), Wait(1), game_crash.record),
+                do(Wait(2.5), Press('A'), Wait(1), game_crash.record),
                 f'{start}__WORLD',
             ),
         ),
