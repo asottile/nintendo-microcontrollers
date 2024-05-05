@@ -43,6 +43,15 @@ def bellibolt(turn: int) -> Choice:
         return Choice.ATT_1
 
 
+def arceus_steel(turn: int) -> Choice:
+    if turn > 5:
+        return Choice.ATT_1
+    elif turn % 2 == 0:
+        return Choice.ATT_0
+    else:
+        return Choice.ATT_1
+
+
 def arceus_ground(turn: int) -> Choice:
     if turn > 5:
         return Choice.ATT_1
@@ -59,20 +68,21 @@ def serperior(turn: int) -> Choice:
         return Choice.ATT_0
 
 
-def zapdos(turn: int) -> Choice:
+def houndoom(turn: int) -> Choice:
     return Choice.ATT_0
 
 
-def umbreon(turn: int) -> Choice:
+def zapdos(turn: int) -> Choice:
     return Choice.ATT_0
 
 
 POSITIONS = (
     bellibolt,
+    arceus_steel,
     arceus_ground,
     serperior,
+    houndoom,
     zapdos,
-    umbreon,
 )
 
 
@@ -142,39 +152,25 @@ def main() -> int:
 
         _, poke = chosen.split()
 
-        if (tp, poke) == ('flying', 'pawmot'):
-            strategy = umbreon
-        elif (tp, poke) == ('bug', 'pawmot'):
-            strategy = umbreon
-        elif tp == 'grass':
-            strategy = umbreon
-        elif (tp, poke) == ('water', 'pawmot'):
-            strategy = serperior
-        elif tp == 'steel' and poke in {
-                'golem-alola', 'tinkaton', 'pawmot', 'armarouge', 'ceruledge',
-                'baxcalibur',
-        }:
-            strategy = umbreon
+        if poke == 'armarouge':
+            strategy = houndoom
         elif tp == 'steel':
             strategy = zapdos
+        elif tp in {'grass', 'fairy', 'dragon'}:
+            strategy = arceus_steel
         elif tp == 'ground':
             strategy = serperior
         elif tp in {'flying', 'water'}:
             strategy = bellibolt
         elif tp in {'fire', 'electric', 'poison', 'rock'}:
             strategy = arceus_ground
-        elif poke == 'pawmot':
-            strategy = arceus_ground
         elif tp in {
-                'normal', 'ice', 'fighting', 'psychic', 'bug', 'ghost',
-                'dark', 'fairy',
+                'normal', 'ice', 'fighting', 'psychic', 'bug', 'ghost', 'dark',
         }:
             strategy = bellibolt
-        elif tp == 'dragon':
-            strategy = arceus_ground
         else:
             print('!!! did not select a strategy?')
-            strategy = umbreon
+            strategy = bellibolt
 
         print(f'strategy chosen: {strategy.__name__}')
 
