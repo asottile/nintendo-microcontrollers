@@ -123,9 +123,8 @@ def _extract_type(
     bottom_right = Point(y=196, x=1095).norm(dims)
     crop = im[top_left.y:bottom_right.y, top_left.x:bottom_right.x]
 
-    color = numpy.array([71, 51, 39])
-    t = numpy.array([1, 1, 1])
-    return cv2.inRange(crop, color - t * 20, color + t * 20)
+    hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
+    return cv2.inRange(hsv, (99, 50, 50), (115, 180, 80))
 
 
 @functools.lru_cache
