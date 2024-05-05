@@ -147,7 +147,7 @@ def raid_type(frame: numpy.ndarray) -> str:
 
 
 @functools.lru_cache
-def _sprites() -> list[tuple[str, numpy.ndarray]]:
+def _sprites(size: tuple[int, int]) -> list[tuple[str, numpy.ndarray]]:
     sprites_dir = os.path.join(_HERE, '../../sv-sprites')
     return [
         (
@@ -157,7 +157,7 @@ def _sprites() -> list[tuple[str, numpy.ndarray]]:
                     os.path.join(sprites_dir, fname),
                     flags=cv2.IMREAD_UNCHANGED,
                 )[:, :, 3],
-                (120, 120),
+                size,
             ),
         )
         for fname in os.listdir(sprites_dir)
@@ -221,7 +221,7 @@ def select_pokemon(frame: numpy.ndarray) -> list[list[str | None]]:
                 ret[p_y].append(None)
             else:
                 star = _best(star_crop, _select_stars())
-                poke = _best(poke_crop, _sprites())
+                poke = _best(poke_crop, _sprites((120, 120)))
                 ret[p_y].append(f'{star} {poke}')
 
     return ret
