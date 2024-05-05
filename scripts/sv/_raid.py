@@ -62,6 +62,13 @@ raid_communication_error = any_match(
 
 
 def to_raid_select(start: str, end: str) -> States:
+    portal_open = match_text(
+        'Mystery Gift',
+        Point(y=535, x=122),
+        Point(y=566, x=241),
+        invert=True,
+    )
+
     return {
         start: (
             (
@@ -79,24 +86,19 @@ def to_raid_select(start: str, end: str) -> States:
             (always_matches, do(Press('s'), Wait(.5)), 'MENU'),
         ),
         'WAIT_FOR_PORTAL': (
-            (
-                match_text(
-                    'Mystery Gift',
-                    Point(y=535, x=122),
-                    Point(y=566, x=241),
-                    invert=True,
-                ),
-                Wait(5),
-                'PORTAL',
-            ),
+            (portal_open, Wait(5), 'PORTAL'),
         ),
         'PORTAL': (
             (
                 match_px(Point(y=315, x=333), Color(b=22, g=198, r=229)),
-                do(Wait(1), Press('A')),
-                'WAIT_FOR_RAID_SELECT',
+                do(),
+                'PRESS_RAID',
             ),
             (always_matches, do(Press('s'), Wait(.5)), 'PORTAL'),
+        ),
+        'PRESS_RAID': (
+            (portal_open, do(Press('A'), Wait(1)), 'PRESS_RAID'),
+            (always_matches, do(), 'WAIT_FOR_RAID_SELECT'),
         ),
         'WAIT_FOR_RAID_SELECT': (
             (
