@@ -115,6 +115,16 @@ def to_raid_select(start: str, end: str) -> States:
     }
 
 
+def _imgs(d: str) -> list[tuple[str, numpy.ndarray]]:
+    return [
+        (
+            os.path.splitext(f)[0],
+            cv2.imread(os.path.join(d, f), flags=cv2.IMREAD_UNCHANGED),
+        )
+        for f in os.listdir(d)
+    ]
+
+
 def _extract_type(
         im: numpy.ndarray,
         dims: tuple[int, int, int],
@@ -131,14 +141,9 @@ def _extract_type(
 
 @functools.lru_cache
 def _types(dims: tuple[int, int, int]) -> list[tuple[str, numpy.ndarray]]:
-    types_dir = os.path.join(_HERE, 'types')
-
     return [
-        (
-            os.path.splitext(tp)[0],
-            _extract_type(cv2.imread(os.path.join(types_dir, tp)), dims),
-        )
-        for tp in os.listdir(types_dir)
+        (name, _extract_type(img, dims))
+        for name, img in _imgs(os.path.join(_HERE, 'types'))
     ]
 
 
@@ -148,32 +153,15 @@ def raid_type(frame: numpy.ndarray) -> str:
 
 @functools.lru_cache
 def _sprites(size: tuple[int, int]) -> list[tuple[str, numpy.ndarray]]:
-    sprites_dir = os.path.join(_HERE, '../../sv-sprites')
     return [
-        (
-            os.path.splitext(fname)[0],
-            cv2.resize(
-                cv2.imread(
-                    os.path.join(sprites_dir, fname),
-                    flags=cv2.IMREAD_UNCHANGED,
-                )[:, :, 3],
-                size,
-            ),
-        )
-        for fname in os.listdir(sprites_dir)
+        (name, cv2.resize(img[:, :, 3], size))
+        for name, img in _imgs(os.path.join(_HERE, '../../sv-sprites'))
     ]
 
 
 @functools.lru_cache
 def _select_stars() -> list[tuple[str, numpy.ndarray]]:
-    stars_dir = os.path.join(_HERE, 'select-stars')
-    return [
-        (
-            os.path.splitext(fname)[0],
-            cv2.imread(os.path.join(stars_dir, fname)),
-        )
-        for fname in os.listdir(stars_dir)
-    ]
+    return _imgs(os.path.join(_HERE, 'select-stars'))
 
 
 def _best(
@@ -190,6 +178,13 @@ def _best(
     return best_name
 
 
+def _poke_mask(crop: numpy.ndarray) -> numpy.ndarray:
+    hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
+    mask = cv2.inRange(hsv, (100, 80, 55), (125, 160, 80))
+    kernel = numpy.ones((3, 3), numpy.uint8)
+    return cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+
+
 def select_pokemon(frame: numpy.ndarray) -> list[list[str | None]]:
     if match_text(
         'No new postings',
@@ -199,10 +194,7 @@ def select_pokemon(frame: numpy.ndarray) -> list[list[str | None]]:
     )(frame):
         return [[None] * 4, [None] * 4]
 
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    mask = cv2.inRange(hsv, (100, 80, 55), (125, 160, 80))
-    kernel = numpy.ones((3, 3), numpy.uint8)
-    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    mask = _poke_mask(frame)
 
     ret: list[list[str | None]] = [[], []]
 
