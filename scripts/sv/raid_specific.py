@@ -52,7 +52,7 @@ def arceus_steel(turn: int) -> Choice:
         return Choice.ATT_1
 
 
-def arceus_ground(turn: int) -> Choice:
+def arceus_ice(turn: int) -> Choice:
     if turn > 5:
         return Choice.ATT_1
     elif turn % 2 == 0:
@@ -68,10 +68,6 @@ def serperior(turn: int) -> Choice:
         return Choice.ATT_0
 
 
-def houndoom(turn: int) -> Choice:
-    return Choice.ATT_0
-
-
 def zapdos(turn: int) -> Choice:
     return Choice.ATT_0
 
@@ -79,9 +75,8 @@ def zapdos(turn: int) -> Choice:
 POSITIONS = (
     bellibolt,
     arceus_steel,
-    arceus_ground,
+    arceus_ice,
     serperior,
-    houndoom,
     zapdos,
 )
 
@@ -152,21 +147,17 @@ def main() -> int:
 
         _, poke = chosen.split()
 
-        if poke == 'armarouge':
-            strategy = houndoom
-        elif tp == 'steel':
+        if tp in {'steel', 'dark', 'rock', 'ice', 'normal'}:
             strategy = zapdos
-        elif tp in {'grass', 'fairy', 'dragon'}:
-            strategy = arceus_steel
         elif tp == 'ground':
             strategy = serperior
         elif tp in {'flying', 'water'}:
             strategy = bellibolt
-        elif tp in {'fire', 'electric', 'poison', 'rock'}:
-            strategy = arceus_ground
-        elif tp in {
-                'normal', 'ice', 'fighting', 'psychic', 'bug', 'ghost', 'dark',
-        }:
+        elif tp in {'grass', 'dragon', 'electric'}:
+            strategy = arceus_ice
+        elif tp == 'fairy':
+            strategy = arceus_steel
+        elif tp in {'fire', 'fighting', 'poison', 'psychic', 'bug', 'ghost'}:
             strategy = bellibolt
         else:
             print('!!! did not select a strategy?')
