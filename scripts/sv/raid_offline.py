@@ -31,77 +31,110 @@ from scripts.switch import reset
 from scripts.switch import SERIAL_DEFAULT
 
 
+class Target(NamedTuple):
+    pos: tuple[Point, Point]
+    threshold: int
+    types: dict[str, tuple[HSVRange, ...]]
+
+
 class HSVRange(NamedTuple):
     low: tuple[int, int, int]
     hi: tuple[int, int, int]
 
 
-COLORS: dict[str, tuple[HSVRange, ...]] = {
-    'bug': (
-        HSVRange((13, 200, 65), (16, 220, 75)),
+TARGETS = {
+    'armarouge': Target(
+        pos=(Point(y=103, x=839), Point(y=132, x=892)),
+        threshold=600,
+        types={
+            'bug': (
+                HSVRange((13, 200, 65), (16, 220, 75)),
+            ),
+            'dark': (
+                HSVRange((173, 185, 65), (178, 210, 80)),
+            ),
+            'dragon': (
+                HSVRange((166, 135, 65), (169, 175, 75)),
+            ),
+            'electric': (
+                HSVRange((13, 180, 70), (17, 205, 80)),
+            ),
+            'fairy': (
+                HSVRange((166, 195, 70), (170, 225, 80)),
+            ),
+            'fighting': (
+                HSVRange((5, 245, 65), (8, 255, 75)),
+            ),
+            'fire': (
+                HSVRange((0, 195, 70), (4, 220, 80)),
+            ),
+            'flying': (
+                HSVRange((0, 105, 55), (3, 130, 70)),
+                HSVRange((177, 105, 55), (180, 130, 70)),
+            ),
+            'ghost': (
+                HSVRange((171, 165, 60), (175, 190, 75)),
+            ),
+            'grass': (
+                HSVRange((14, 185, 60), (19, 210, 75)),
+            ),
+            'ground': (
+                HSVRange((4, 210, 65), (8, 230, 75)),
+            ),
+            'ice': (
+                HSVRange((174, 90, 65), (179, 125, 80)),
+            ),
+            'normal': (
+                HSVRange((0, 120, 65), (2, 150, 75)),
+                HSVRange((178, 120, 65), (180, 150, 75)),
+            ),
+            'poison': (
+                HSVRange((167, 185, 65), (170, 215, 75)),
+            ),
+            'psychic': (
+                HSVRange((171, 165, 60), (175, 210, 75)),
+            ),
+            'rock': (
+                HSVRange((1, 155, 65), (8, 175, 80)),
+            ),
+            'steel': (
+                HSVRange((0, 120, 65), (2, 150, 75)),
+                HSVRange((178, 120, 65), (180, 150, 75)),
+            ),
+            'water': (
+                HSVRange((166, 90, 60), (171, 130, 70)),
+            ),
+        },
     ),
-    'dark': (
-        HSVRange((173, 185, 65), (178, 210, 80)),
-    ),
-    'dragon': (
-        HSVRange((166, 135, 65), (169, 175, 75)),
-    ),
-    'electric': (
-        HSVRange((13, 180, 70), (17, 205, 80)),
-    ),
-    'fairy': (
-        HSVRange((166, 195, 70), (170, 225, 80)),
-    ),
-    'fighting': (
-        HSVRange((5, 245, 65), (8, 255, 75)),
-    ),
-    'fire': (
-        HSVRange((0, 195, 70), (4, 220, 80)),
-    ),
-    'flying': (
-        HSVRange((0, 105, 55), (3, 130, 70)),
-        HSVRange((177, 105, 55), (180, 130, 70)),
-    ),
-    'ghost': (
-        HSVRange((171, 165, 60), (175, 190, 75)),
-    ),
-    'grass': (
-        HSVRange((14, 185, 60), (19, 210, 75)),
-    ),
-    'ground': (
-        HSVRange((4, 210, 65), (8, 230, 75)),
-    ),
-    'ice': (
-        HSVRange((174, 90, 65), (179, 125, 80)),
-    ),
-    'normal': (
-        HSVRange((0, 120, 65), (2, 150, 75)),
-        HSVRange((178, 120, 65), (180, 150, 75)),
-    ),
-    'poison': (
-        HSVRange((167, 185, 65), (170, 215, 75)),
-    ),
-    'psychic': (
-        HSVRange((171, 165, 60), (175, 210, 75)),
-    ),
-    'rock': (
-        HSVRange((1, 155, 65), (8, 175, 80)),
-    ),
-    'steel': (
-        HSVRange((0, 120, 65), (2, 150, 75)),
-        HSVRange((178, 120, 65), (180, 150, 75)),
-    ),
-    'water': (
-        HSVRange((166, 90, 60), (171, 130, 70)),
+    'palafin': Target(
+        pos=(Point(y=147, x=888), Point(y=168, x=911)),
+        threshold=450,
+        types={
+            'fairy': (
+                HSVRange((92, 95, 35), (101, 120, 45)),
+            ),
+            'fire': (
+                HSVRange((88, 85, 30), (90, 120, 40)),
+            ),
+            'grass': (
+                HSVRange((81, 175, 40), (85, 190, 45)),
+            ),
+            'ice': (
+                HSVRange((88, 145, 35), (93, 165, 45)),
+            ),
+            'water': (
+                HSVRange((89, 180, 35), (94, 195, 45)),
+            ),
+        },
     ),
 }
 
 
-def _filter_armarouge(f: numpy.ndarray, color: str) -> numpy.ndarray:
+def _filter(f: numpy.ndarray, target: Target, color: str) -> numpy.ndarray:
     hsv = cv2.cvtColor(f, cv2.COLOR_BGR2HSV)
 
     im = None
-    for low, hi in COLORS[color]:
+    for low, hi in target.types[color]:
         filt = cv2.inRange(hsv, low, hi)
         if im is None:
             im = filt
@@ -119,7 +152,7 @@ def main() -> int:
     with open(args.targets_file) as f:
         targets = frozenset(f.read().splitlines())
 
-    counter = 30
+    counter = 50
 
     def counter_expired(frame: object) -> bool:
         return counter == 0
@@ -130,7 +163,7 @@ def main() -> int:
 
     def counter_reset(vid: object, ser: object) -> None:
         nonlocal counter
-        counter = 30
+        counter = 50
 
     key = pokemon = tp = ''
 
@@ -160,19 +193,23 @@ def main() -> int:
 
         maybe_shiny = True
 
-        if pokemon != 'armarouge':
-            print(f'not armarouge: {pokemon}')
+        target = TARGETS.get(pokemon)
+
+        if target is None:
+            print(f'unknown pokemon: {pokemon}')
             return
 
-        if tp not in COLORS:
+        if tp not in target.types:
             print(f'unknown type: {tp}')
             return
 
-        eye = _filter_armarouge(frame[103:132, 839:892], tp)
-        eye_count = numpy.count_nonzero(eye)
-        if eye_count >= 600:
+        tl, br = target.pos
+        crop = frame[tl.y:br.y, tl.x:br.x]
+        thres = _filter(crop, target, tp)
+        px = numpy.count_nonzero(thres)
+        if px >= target.threshold:
             maybe_shiny = False
-            print(f'probably not shiny {eye_count=}')
+            print(f'probably not shiny {px=}')
 
     states: States = {
         **bootup('INITIAL', success='STARTED', fail='INITIAL'),
