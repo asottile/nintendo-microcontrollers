@@ -19,7 +19,7 @@ def bootup(start: str, success: str, fail: str) -> States:
 
     return {
         start: (
-            (game_start, do(Press('A'), Wait(1)), f'{start}__CONTINUE'),
+            (game_start, do(Wait(1), Press('A')), f'{start}__CONTINUE'),
         ),
         f'{start}__CONTINUE': (
             (
