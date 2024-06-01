@@ -274,6 +274,31 @@ class Timeout:
         return time.monotonic() > self.end
 
 
+class Counter:
+    def __init__(self, n: int = 0) -> None:
+        self.n = 0
+
+    def increment(self, vid: object, ser: object) -> None:
+        self.n += 1
+
+    def decrement(self, vid: object, ser: object) -> None:
+        self.n -= 1
+
+    def set_to(self, n: int) -> Action:
+        def set_to_impl(vid: object, ser: object) -> None:
+            self.n = n
+        return set_to_impl
+
+    def equals(self, n: int) -> Matcher:
+        def equals_impl(frame: object) -> bool:
+            return self.n == n
+        return equals_impl
+
+    @property
+    def zero(self) -> Matcher:
+        return self.equals(0)
+
+
 States = Mapping[str, tuple[tuple[Matcher, Action, str], ...]]
 
 
