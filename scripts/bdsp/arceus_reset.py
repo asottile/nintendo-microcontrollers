@@ -85,7 +85,7 @@ def _color_near(pixel: numpy.ndarray, expected: tuple[int, int, int]) -> bool:
 
 
 @contextlib.contextmanager
-def _shh(ser: serial.Serial) -> Generator[None, None, None]:
+def _shh(ser: serial.Serial) -> Generator[None]:
     try:
         yield
     finally:
