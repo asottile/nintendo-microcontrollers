@@ -93,7 +93,7 @@ def _await_not_pixel(
 
 
 @contextlib.contextmanager
-def _shh(ser: serial.Serial) -> Generator[None, None, None]:
+def _shh(ser: serial.Serial) -> Generator[None]:
     try:
         yield
     finally:
