@@ -60,7 +60,7 @@ def main() -> int:
     states: States = {
         **to_boxes('INITIAL', 'RELEASE_BOX'),
         'RELEASE_BOX': (
-            (done, bye, 'INVALID'),
+            (done, bye, 'UNREACHABLE'),
             (always_matches, release_box, 'NEXT_BOX'),
         ),
         **move_box('NEXT_BOX', 'RELEASE_BOX', 'R'),
