@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import enum
+import os
 import sys
 
 import cv2
@@ -43,7 +44,7 @@ def bellibolt(turn: int) -> Choice:
         return Choice.ATT_1
 
 
-def arceus_steel(turn: int) -> Choice:
+def arceus_flying(turn: int) -> Choice:
     if turn > 5:
         return Choice.ATT_1
     elif turn % 2 == 0:
@@ -52,13 +53,12 @@ def arceus_steel(turn: int) -> Choice:
         return Choice.ATT_1
 
 
-def arceus_ice(turn: int) -> Choice:
-    if turn > 5:
-        return Choice.ATT_1
-    elif turn % 2 == 0:
-        return Choice.ATT_0
-    else:
-        return Choice.ATT_1
+def arceus_dark(turn: int) -> Choice:
+    return arceus_flying(turn)
+
+
+def arceus_fairy(turn: int) -> Choice:
+    return arceus_flying(turn)
 
 
 def serperior(turn: int) -> Choice:
@@ -74,8 +74,9 @@ def zapdos(turn: int) -> Choice:
 
 POSITIONS = (
     bellibolt,
-    arceus_steel,
-    arceus_ice,
+    arceus_flying,
+    arceus_dark,
+    arceus_fairy,
     serperior,
     zapdos,
 )
@@ -153,11 +154,13 @@ def main() -> int:
             strategy = serperior
         elif tp in {'flying', 'water'}:
             strategy = bellibolt
-        elif tp in {'grass', 'dragon', 'electric'}:
-            strategy = arceus_ice
-        elif tp == 'fairy':
-            strategy = arceus_steel
-        elif tp in {'fire', 'fighting', 'poison', 'psychic', 'bug', 'ghost'}:
+        elif tp in {'grass', 'fighting', 'bug'}:
+            strategy = arceus_flying
+        elif tp in {'psychic', 'ghost', 'electric'}:
+            strategy = arceus_dark
+        elif tp == 'dragon':
+            strategy = arceus_fairy
+        elif tp in {'fire', 'poison', 'fairy'}:
             strategy = bellibolt
         else:
             print('!!! did not select a strategy?')
@@ -196,6 +199,12 @@ def main() -> int:
         )
         return text.endswith('has been sent to your Boxes!')
 
+    def screen(vid: cv2.VideoCapture, ser: object) -> None:
+        frame = getframe(vid)
+        os.makedirs('caught', exist_ok=True)
+        n = len(os.listdir('caught'))
+        cv2.imwrite(f'caught/{n:04}.png', frame)
+
     move_select = all_match(
         match_px(Point(y=681, x=571), Color(b=247, g=241, r=242)),
         match_text(
@@ -209,6 +218,16 @@ def main() -> int:
     states: States = {
         **to_raid_select('INITIAL', 'RAID_SELECT'),
         'RAID_SELECT': (
+            (
+                match_text(
+                    'Connect to Internet',
+                    Point(y=680, x=1031),
+                    Point(y=706, x=1176),
+                    invert=True,
+                ),
+                lambda *a: sys.exit(25),
+                'UNREACHABLE',
+            ),
             (
                 always_matches,
                 do(Wait(1), Press('a'), Wait(.25), detect),
@@ -397,7 +416,7 @@ def main() -> int:
                     Point(y=703, x=1260),
                     invert=True,
                 ),
-                do(Wait(1), Press('A')),
+                do(Wait(3), screen, Press('A')),
                 'WAIT_FOR_BOX',
             ),
             (always_matches, Wait(1), 'WAIT_FOR_CAUGHT'),
