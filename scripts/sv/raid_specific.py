@@ -338,7 +338,7 @@ def main() -> int:
                 all_match(
                     lambda _: strategy(turn) == Choice.ATT_0,
                     move_select,
-                    lambda frame: attack_position(frame) == 1,
+                    lambda frame: attack_position(frame) != 0,
                 ),
                 do(Press('w'), Wait(.3)),
                 'RAID',
@@ -347,7 +347,7 @@ def main() -> int:
                 all_match(
                     lambda _: strategy(turn) == Choice.ATT_1,
                     move_select,
-                    lambda frame: attack_position(frame) == 0,
+                    lambda frame: attack_position(frame) != 1,
                 ),
                 do(Press('s'), Wait(.3)),
                 'RAID',

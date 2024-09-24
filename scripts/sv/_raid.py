@@ -235,16 +235,17 @@ def raid_pokemon(frame: numpy.ndarray) -> str:
     return _best(_poke_mask(frame[145:380, 763:998]), _sprites((235, 235)))
 
 
-@functools.lru_cache(maxsize=1)
-def _arrow_mask() -> tuple[numpy.ndarray, numpy.ndarray]:
-    tmpl = cv2.imread(os.path.join(_HERE, 'templates', 'move_arrow.png'))
-    mask = 255 - cv2.inRange(tmpl, tmpl[0][0], tmpl[0][0])
-    return tmpl, mask
-
-
 def attack_position(frame: numpy.ndarray) -> int:
-    crop = frame[390:699, 889:987]
-    arrow, mask = _arrow_mask()
-    match = cv2.matchTemplate(crop, arrow, cv2.TM_CCOEFF_NORMED, mask=mask)
-    _, _, _, (_, arrow_y) = cv2.minMaxLoc(match)
-    return int(arrow_y / len(crop) * 4)
+    best = 0
+    num = 0
+    for i in range(4):
+        crop = frame[450 + 75 * i:460 + 75 * i, 950:975]
+
+        hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, (27, 240, 240), (29, 255, 255))
+        n = int(numpy.count_nonzero(mask))
+        if n >= num:
+            best = i
+            num = n
+
+    return best
