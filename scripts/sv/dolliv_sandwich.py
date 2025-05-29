@@ -177,7 +177,7 @@ def main() -> int:
                     Press('A'), Wait(10),
                     # confirm
                     Press('A'), Wait(25),
-                    # noice
+                    # noise
                     Press('A'), Wait(5),
                     reset_timer.after(29 * 60),
                 ),
