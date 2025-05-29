@@ -19,7 +19,7 @@ const int PIN_Y_READ = A6;
 const float VCC = 4.59; // measured while plugged into usb
 const float VMAX = 1.8;
 const uint16_t SCALE = uint16_t(4095 * VMAX / VCC);
-const uint16_t SCALE_Y = SCALE - 21;  // slightly innaccurate DACs?
+const uint16_t SCALE_Y = SCALE - 21;  // slightly inaccurate DACs?
 const uint16_t SCALE_X = SCALE + 4;
 
 const uint8_t DAC_Y = 0x62;
