@@ -14,7 +14,7 @@ const float VCC = 4.59; // measured while plugged into usb
 const float VMAX = 1.8;
 const uint16_t SCALE = uint16_t(4095 * VMAX / VCC);
 
-const uint16_t Y_MAX = SCALE + 4;  // slightly innaccurate DACs?
+const uint16_t Y_MAX = SCALE + 4;  // slightly inaccurate DACs?
 const uint16_t Y_MID = Y_MAX * .8 / 1.8;
 const uint16_t Y_MIN = 0;
 
