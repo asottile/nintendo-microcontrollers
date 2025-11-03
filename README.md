@@ -7,6 +7,8 @@ control various nintendo consoles with arduino!
 
 [more details](hw/switch)
 
+(also works for switch 2!)
+
 ![](https://user-images.githubusercontent.com/1810591/114293095-2ab8a980-9a48-11eb-9b35-290d58786701.jpg)
 
 ## nintendo switch joycon
