@@ -42,7 +42,8 @@ def main() -> int:
 
             current = getframe()
             if start == end:
-                print(f'match_px({end}, {Color(*current[y][x])})')
+                as_ints = [int(p) for p in current[y][x]]
+                print(f'match_px({end}, {Color(*as_ints)})')
                 arr = numpy.array([[current[y][x]]])
                 print(f'hsv: {cv2.cvtColor(arr, cv2.COLOR_BGR2HSV)}')
             else:
