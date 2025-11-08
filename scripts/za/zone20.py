@@ -13,7 +13,6 @@ from scripts.engine import Point
 from scripts.engine import Press
 from scripts.engine import run
 from scripts.engine import States
-from scripts.engine import Wait
 from scripts.switch import SERIAL_DEFAULT
 from scripts.thrids import region_colorish
 
@@ -26,9 +25,9 @@ def main() -> int:
     world = region_colorish(
         Point(y=120, x=118),
         Point(y=124, x=122),
-        (98, 190, 200),
+        (98, 185, 200),
         (104, 255, 255),
-        .95,
+        .9,
     )
 
     def press(s: str) -> Action:
@@ -37,6 +36,7 @@ def main() -> int:
             ser.write(s.encode())
             time.sleep(.1)
             ser.write(b'.')
+            time.sleep(.05)
         return press_impl
 
     def nl(vid: object, ser: object) -> None:
@@ -46,17 +46,17 @@ def main() -> int:
         'INITIAL': (
             (
                 world,
-                do(
-                    Press('w', duration=4),
-                    Press('s', duration=4.3), Wait(.25),
-                    Press('A'), Wait(.25),
-                ),
-                'SCREAM',
+                do(Press('w', duration=4), Press('s', duration=4.3)),
+                'GOODBYE_WORLD',
             ),
+        ),
+        'GOODBYE_WORLD': (
+            (world, press('A'), 'GOODBYE_WORLD'),
+            (always_matches, nl, 'SCREAM'),
         ),
         'SCREAM': (
             (world, nl, 'INITIAL'),
-            (always_matches, do(press('A'), Wait(.1)), 'SCREAM'),
+            (always_matches, press('A'), 'SCREAM'),
         ),
     }
 
