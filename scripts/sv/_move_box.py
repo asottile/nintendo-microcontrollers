@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import numpy
 
 from scripts.engine import always_matches
