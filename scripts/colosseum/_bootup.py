@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from scripts.engine import do
 from scripts.engine import match_text
 from scripts.engine import Point
